@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Fraunces, Spline_Sans, Space_Mono } from 'next/font/google';
 import './globals.css';
 import SmoothScroll from '@/components/SmoothScroll';
+import { LangProvider } from '@/lib/i18n';
 
 // Display: a characterful old-style serif with optical sizing & soft "wonk".
 const display = Fraunces({
@@ -28,13 +29,13 @@ const mono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Masa Madre — A Museum & Laboratory of Sourdough',
+  title: 'Masa Madre — Museo y Laboratorio del Pan de Masa Madre',
   description:
-    'An immersive journey through 6,000 years of sourdough bread and a living laboratory of its fermentation science — history, microbiology, and craft.',
+    'Un viaje inmersivo por 6.000 años de pan de masa madre y un laboratorio vivo de su ciencia de fermentación: historia, microbiología y oficio. (English available.)',
   openGraph: {
     title: 'Masa Madre',
     description:
-      'Six thousand years of sourdough, and its biology under glass. A digital museum and living laboratory.',
+      'Seis mil años de masa madre, y su biología bajo el microscopio. Un museo digital y laboratorio vivo.',
     type: 'website',
   },
 };
@@ -50,11 +51,13 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="en"
+      lang="es"
       className={`${display.variable} ${body.variable} ${mono.variable}`}
     >
       <body>
-        <SmoothScroll>{children}</SmoothScroll>
+        <LangProvider>
+          <SmoothScroll>{children}</SmoothScroll>
+        </LangProvider>
         <div className="grain" aria-hidden="true" />
       </body>
     </html>

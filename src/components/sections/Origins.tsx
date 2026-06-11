@@ -2,55 +2,63 @@
 
 import SectionHeading from '@/components/SectionHeading';
 import { useReveal } from '@/lib/useReveal';
+import { useContent } from '@/lib/i18n';
+import { img } from '@/lib/asset';
 
 export default function Origins() {
   const ref = useReveal<HTMLElement>();
+  const { origins, ingredients } = useContent();
 
   return (
     <section id="origins" ref={ref} className="section-pad relative">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-16 lg:grid-cols-[0.9fr_1.1fr]">
         <SectionHeading
-          index="I"
-          eyebrow="Origins"
+          index={origins.index}
+          eyebrow={origins.eyebrow}
           title={
             <>
-              Ground grain,
+              {origins.titleA}
               <br />
-              <span className="italic text-levain">wild air</span>
+              <span className="italic text-levain">{origins.titleB}</span>
             </>
           }
         />
 
         <div className="space-y-8">
-          <p className="reveal text-pretty text-lg leading-relaxed text-linen/85">
-            The first leaven was an accident of patience. Flour and water, left
-            long enough, are never truly alone — the grain itself carries wild
-            yeast, and the air carries lactic acid bacteria. Wait, and the
-            mixture begins to breathe.
+          <p className="reveal text-pretty text-lg leading-relaxed text-ink/85">
+            {origins.p1}
           </p>
           <p className="reveal text-pretty leading-relaxed text-ash">
-            Any flour can ferment, but a porous, lifted loaf needs strength: a
-            flour able to absorb water and build gluten from its proteins. Salt
-            tunes the work, slowing enzymes and tightening the dough’s
-            structure. From those four things — flour, water, salt, and time —
-            every bread in this archive descends.
+            {origins.p2}
           </p>
+        </div>
+      </div>
 
-          <div className="reveal grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-crumb bg-crumb sm:grid-cols-4">
-            {[
-              ['Flour', 'Structure & fuel'],
-              ['Water', 'The medium of life'],
-              ['Salt', 'Control & flavour'],
-              ['Time', 'The living variable'],
-            ].map(([k, v]) => (
-              <div key={k} className="bg-pumpernickel p-5">
-                <p className="font-display text-xl text-linen">{k}</p>
-                <p className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-ash">
-                  {v}
-                </p>
+      {/* Four materials — each a framed specimen photograph */}
+      <div className="mx-auto mt-20 max-w-6xl">
+        <p className="reveal eyebrow mb-6">{origins.ingredientsHeading}</p>
+        <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
+          {ingredients.map((ing) => (
+            <figure key={ing.key} className="reveal group">
+              <div className="img-frame relative aspect-[4/5]">
+                <img
+                  src={img(ing.img)}
+                  alt={ing.name}
+                  loading="lazy"
+                  className="h-full w-full object-cover grayscale-[0.15] transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/75 to-transparent p-4">
+                  <p className="font-display text-2xl text-paper">{ing.name}</p>
+                  <p className="font-mono text-[0.58rem] uppercase tracking-[0.14em] text-paper/70">
+                    {ing.tag}
+                  </p>
+                </div>
               </div>
-            ))}
-          </div>
+              <figcaption className="text-pretty mt-3 text-sm leading-relaxed text-ash">
+                {ing.body}
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </div>
     </section>

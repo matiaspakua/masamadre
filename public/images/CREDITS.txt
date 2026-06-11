@@ -1,0 +1,13 @@
+Image credits — all from Wikimedia Commons (see each file page for license & author).
+
+hero-sourdough.jpg <- https://commons.wikimedia.org/wiki/File:Sourdough_Bread_Loaf.jpg
+flour.jpg <- https://commons.wikimedia.org/wiki/File:All-Purpose_Flour_%284107895947%29.jpg
+salt.jpg <- https://commons.wikimedia.org/wiki/File:Salt_Crystals_macro.jpg
+water.jpg <- https://commons.wikimedia.org/wiki/File:Glass_of_water_splash.jpg
+wheat.jpg <- https://commons.wikimedia.org/wiki/File:Sunset-over-the-wheat-field-featured.jpg
+starter.jpg <- https://commons.wikimedia.org/wiki/File:Sourdough_starter_001.jpg
+baguette.jpg <- https://commons.wikimedia.org/wiki/File:Baguette_mie.jpg
+rye.jpg <- https://commons.wikimedia.org/wiki/File:Dark_rye_bread.JPG
+ciabatta.jpg <- https://commons.wikimedia.org/wiki/File:Ciabatta_Bread_-_50882077453.jpg
+wholewheat.jpg <- https://commons.wikimedia.org/wiki/File:Vegan_no-knead_whole_wheat_bread_loaf%2C_September_2010.jpg
+kneading.jpg <- https://commons.wikimedia.org/wiki/File:Worlds_easiest_French_bread._Flour%2C_salt%2C_yeast%2C_water._Knead_by_dough_hook%2C_then_by_hand._%285518631454%29.jpg

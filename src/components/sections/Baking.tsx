@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { OVEN_CHANGES } from '@/lib/content';
+import { useContent } from '@/lib/i18n';
 import { useReveal } from '@/lib/useReveal';
 
 // The oven: three simultaneous transformations at rising temperatures. A heat
@@ -12,6 +12,7 @@ import { useReveal } from '@/lib/useReveal';
 export default function Baking() {
   const ref = useReveal<HTMLElement>();
   const heat = useRef<HTMLDivElement>(null);
+  const { oven } = useContent();
 
   useEffect(() => {
     const reduced = window.matchMedia(
@@ -23,9 +24,9 @@ export default function Baking() {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         heat.current,
-        { opacity: 0.15 },
+        { opacity: 0.12 },
         {
-          opacity: 0.85,
+          opacity: 0.8,
           scrollTrigger: {
             trigger: ref.current!,
             start: 'top 70%',
@@ -46,29 +47,28 @@ export default function Baking() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(181,86,42,0.5), rgba(232,163,61,0.18) 45%, transparent 75%)',
+            'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(168,67,30,0.28), rgba(192,116,26,0.12) 45%, transparent 75%)',
         }}
       />
 
       <div className="relative mx-auto max-w-6xl">
         <div className="reveal mb-6 flex items-center gap-4">
-          <span className="font-mono text-sm text-levain">VI</span>
-          <span className="h-px w-10 bg-crumb" />
-          <span className="eyebrow">The Oven</span>
+          <span className="font-mono text-sm text-levain">{oven.index}</span>
+          <span className="h-px w-10 bg-line" />
+          <span className="eyebrow">{oven.eyebrow}</span>
         </div>
         <h2 className="reveal display text-balance text-[clamp(2.4rem,6vw,5rem)]">
-          Three changes, <span className="italic text-ember">at once</span>
+          {oven.titleA} <span className="italic text-ember">{oven.titleB}</span>
         </h2>
-        <p className="reveal text-pretty mt-6 max-w-reading leading-relaxed text-linen/80">
-          Heat ends the fermentation and begins the bread. In a few hundred
-          degrees, a slack, living dough is fixed forever into crust and crumb.
+        <p className="reveal text-pretty mt-6 max-w-reading leading-relaxed text-ink/80">
+          {oven.intro}
         </p>
 
         <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {OVEN_CHANGES.map((c, i) => (
+          {oven.changes.map((c, i) => (
             <article
               key={c.title}
-              className="reveal relative flex flex-col justify-between overflow-hidden rounded-sm border border-ember/30 bg-pumpernickel/80 p-8 backdrop-blur-sm"
+              className="reveal relative flex flex-col justify-between overflow-hidden rounded-sm border border-ember/30 bg-surface p-8 shadow-[0_18px_40px_-32px_rgba(168,67,30,0.7)]"
               style={{ minHeight: '15rem' }}
             >
               <div className="flex items-start justify-between">
@@ -78,8 +78,8 @@ export default function Baking() {
                 </span>
               </div>
               <div>
-                <h3 className="font-display text-2xl text-linen">{c.title}</h3>
-                <p className="text-pretty mt-3 text-sm leading-relaxed text-linen/75">
+                <h3 className="font-display text-2xl text-ink">{c.title}</h3>
+                <p className="text-pretty mt-3 text-sm leading-relaxed text-ink/75">
                   {c.body}
                 </p>
               </div>
@@ -88,9 +88,7 @@ export default function Baking() {
         </div>
 
         <p className="reveal mt-10 max-w-reading text-pretty leading-relaxed text-ash">
-          Then comes cooling — the quiet final step. Proteins settle, the crumb
-          stabilises, and the crust sings as it contracts. The loaf is still
-          becoming itself long after it leaves the heat.
+          {oven.cooling}
         </p>
       </div>
     </section>

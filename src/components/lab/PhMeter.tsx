@@ -9,24 +9,22 @@ export default function PhMeter({ ph }: { ph: number }) {
 
   return (
     <div className="flex h-full gap-3">
-      <div className="relative w-2 overflow-hidden rounded-full bg-gradient-to-b from-phosphor/70 via-levain/70 to-ember">
+      <div className="relative w-2 overflow-hidden rounded-full bg-gradient-to-b from-phosphor via-levain to-ember">
         {/* needle */}
         <div
-          className="absolute left-1/2 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-char bg-linen shadow-[0_0_8px_rgba(237,228,211,0.6)] transition-all duration-700 ease-archive"
+          className="absolute left-1/2 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-surface bg-ink shadow-[0_0_6px_rgba(42,32,24,0.5)] transition-all duration-700 ease-archive"
           style={{ top: `calc(${pct(ph)}% - 6px)` }}
         />
         {/* pH 4.6 safety threshold */}
         <div
-          className="absolute left-0 h-px w-full bg-linen/60"
+          className="absolute left-0 h-px w-full bg-ink/50"
           style={{ top: `${pct(4.6)}%` }}
         />
       </div>
 
       <div className="flex flex-col justify-between py-0.5">
         <span className="font-mono text-[0.6rem] text-ash">6.5</span>
-        <span className="font-mono text-[0.6rem] text-linen/70">
-          4.6 · safe
-        </span>
+        <span className="font-mono text-[0.6rem] text-ink/70">4.6</span>
         <span className="font-mono text-[0.6rem] text-ash">3.5</span>
       </div>
 

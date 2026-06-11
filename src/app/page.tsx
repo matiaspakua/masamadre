@@ -3,6 +3,7 @@ import Hero from '@/components/sections/Hero';
 import Origins from '@/components/sections/Origins';
 import Timeline from '@/components/sections/Timeline';
 import Laboratory from '@/components/sections/Laboratory';
+import BreadTypes from '@/components/sections/BreadTypes';
 import Process from '@/components/sections/Process';
 import Composition from '@/components/sections/Composition';
 import Baking from '@/components/sections/Baking';
@@ -19,6 +20,7 @@ export default function Home() {
         <Origins />
         <Timeline />
         <Laboratory />
+        <BreadTypes />
         <div className="rule-fade mx-auto max-w-6xl" />
         <Process />
         <Composition />

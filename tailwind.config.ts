@@ -1,22 +1,34 @@
 import type { Config } from 'tailwindcss';
 
-// "The Living Archive" — a dark, art-directed fermentation observatory.
-// Warm tokens carry history & craft; the single cool token (phosphor) is
-// reserved exclusively for laboratory data so colour itself encodes meaning.
+// "The Living Archive" — light edition. A warm-white museum/lab daylight,
+// printed-page surfaces, ink text, with amber & ember carrying warmth and a
+// single deep teal (phosphor) reserved exclusively for laboratory data so
+// colour itself still encodes meaning.
+//
+// Token legend (names kept stable across the codebase):
+//   paper   page background (warm white)
+//   surface raised cards / panels (near-white)
+//   sink    deeper bands for section contrast
+//   ink     primary text (warm near-black)
+//   ash     muted secondary text
+//   line    hairlines, borders, dividers
+//   levain  living-starter amber  (history & craft)
+//   ember   oven heat / crust     (used sparingly)
+//   phosphor instrument teal      (LAB DATA ONLY)
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        char: '#16110D', // near-black charred crust — primary canvas
-        pumpernickel: '#211913', // raised surfaces, cards, the lab table
-        soot: '#0E0A07', // deepest wells
-        linen: '#EDE4D3', // warm paper — primary text
-        ash: '#9A8E7B', // muted captions, secondary text
-        levain: '#E8A33D', // amber glow of a living starter
-        ember: '#B5562A', // oven heat / crust — used sparingly
-        phosphor: '#7FD6C7', // instrument cyan — LAB DATA ONLY
-        crumb: '#3A2C20', // hairlines, dividers, borders
+        paper: '#F6F1E7',
+        surface: '#FFFDF8',
+        sink: '#EDE5D6',
+        ink: '#2A2018',
+        ash: '#8A7C68',
+        line: '#E1D6C2',
+        levain: '#C0741A',
+        ember: '#A8431E',
+        phosphor: '#0E7A6B',
       },
       fontFamily: {
         display: ['var(--font-display)', 'Georgia', 'serif'],
@@ -40,7 +52,7 @@ const config: Config = {
         },
         flicker: {
           '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.82' },
+          '50%': { opacity: '0.85' },
         },
       },
       animation: {

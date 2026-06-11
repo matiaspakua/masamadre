@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --char: #16110d;
-  --linen: #ede4d3;
-  --levain: #e8a33d;
-  --phosphor: #7fd6c7;
+  --paper: #f6f1e7;
+  --ink: #2a2018;
+  --levain: #c0741a;
+  --phosphor: #0e7a6b;
 }
 
 @layer base {
@@ -16,8 +16,8 @@
   }
 
   body {
-    background-color: var(--char);
-    color: var(--linen);
+    background-color: var(--paper);
+    color: var(--ink);
     font-family: var(--font-body), system-ui, sans-serif;
     overflow-x: hidden;
   }
@@ -36,7 +36,7 @@
 
   ::selection {
     background: var(--levain);
-    color: var(--char);
+    color: #fff;
   }
 
   :focus-visible {
@@ -46,14 +46,15 @@
 }
 
 @layer components {
-  /* Fine grain/flour-dust noise overlaid on the whole page for tactility. */
+  /* Fine flour-dust grain overlaid on the whole page for tactility. On a
+     light ground we multiply a faint speckle rather than overlay. */
   .grain {
     position: fixed;
     inset: 0;
     z-index: 50;
     pointer-events: none;
-    opacity: 0.045;
-    mix-blend-mode: overlay;
+    opacity: 0.035;
+    mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
@@ -65,14 +66,13 @@
     @apply font-mono uppercase tracking-[0.18em] text-phosphor;
   }
 
-  /* A hairline that fades, used as a section rule / archival divider. */
   .rule-fade {
     height: 1px;
     background: linear-gradient(
       90deg,
       transparent,
-      theme('colors.crumb') 12%,
-      theme('colors.crumb') 88%,
+      theme('colors.line') 12%,
+      theme('colors.line') 88%,
       transparent
     );
   }
@@ -81,19 +81,58 @@
     @apply px-6 py-28 sm:px-10 md:py-40 lg:px-16;
   }
 
-  /* Radial warmth behind the hero & lab — the "specimen under light" glow. */
+  /* Warm light pooled behind the hero & lab — the "specimen under daylight". */
   .glow-levain {
     background: radial-gradient(
       ellipse 60% 50% at 50% 45%,
-      rgba(232, 163, 61, 0.22),
+      rgba(192, 116, 26, 0.14),
       transparent 70%
     );
   }
 
-  /* Display headline treatment with optical character. */
   .display {
     @apply font-display font-light leading-[0.95] tracking-[-0.01em];
     font-optical-sizing: auto;
+  }
+
+  /* Framed archival image with a hairline and soft warm shadow. */
+  .img-frame {
+    @apply overflow-hidden rounded-sm border border-line bg-surface;
+    box-shadow: 0 18px 40px -28px rgba(42, 32, 24, 0.45);
+  }
+
+  /* Lab slider control. */
+  .mm-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 2px;
+    background: theme('colors.line');
+    border-radius: 9999px;
+    outline: none;
+    cursor: pointer;
+  }
+  .mm-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 9999px;
+    background: theme('colors.levain');
+    border: 2px solid theme('colors.surface');
+    box-shadow: 0 1px 4px rgba(42, 32, 24, 0.4);
+    transition: transform 0.15s ease;
+  }
+  .mm-range::-webkit-slider-thumb:hover {
+    transform: scale(1.18);
+  }
+  .mm-range::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 9999px;
+    background: theme('colors.levain');
+    border: 2px solid theme('colors.surface');
+    box-shadow: 0 1px 4px rgba(42, 32, 24, 0.4);
   }
 }
 
@@ -118,11 +157,11 @@
   border-radius: 9999px;
   background: radial-gradient(
     circle at 32% 30%,
-    rgba(255, 255, 255, 0.55),
-    rgba(232, 163, 61, 0.18) 55%,
+    rgba(255, 255, 255, 0.7),
+    rgba(192, 116, 26, 0.22) 55%,
     transparent 72%
   );
-  box-shadow: 0 0 8px rgba(232, 163, 61, 0.25);
+  box-shadow: 0 0 6px rgba(192, 116, 26, 0.3);
   animation-name: rise;
   animation-timing-function: ease-in;
   animation-iteration-count: infinite;
