@@ -2,6 +2,7 @@
 
 import { useReveal } from '@/lib/useReveal';
 import SectionHeading from '@/components/SectionHeading';
+import Tilt from '@/components/Tilt';
 import { useContent } from '@/lib/i18n';
 import { img } from '@/lib/asset';
 
@@ -35,7 +36,7 @@ export default function BreadTypes() {
               key={b.key}
               className={`reveal group ${i === 0 ? 'sm:col-span-2 lg:row-span-2' : ''}`}
             >
-              <div
+              <Tilt
                 className={`img-frame relative ${i === 0 ? 'aspect-[16/10] lg:h-full' : 'aspect-[4/3]'}`}
               >
                 <img
@@ -45,7 +46,10 @@ export default function BreadTypes() {
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                <div
+                  className="absolute inset-x-0 bottom-0 p-5 sm:p-6"
+                  style={{ transform: 'translateZ(40px)' }}
+                >
                   <div className="flex items-baseline justify-between gap-3">
                     <h3
                       className={`font-display text-paper ${i === 0 ? 'text-4xl sm:text-5xl' : 'text-3xl'}`}
@@ -60,7 +64,7 @@ export default function BreadTypes() {
                     {b.body}
                   </p>
                 </div>
-              </div>
+              </Tilt>
             </article>
           ))}
         </div>

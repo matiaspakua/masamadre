@@ -1,4 +1,5 @@
 import Nav from '@/components/Nav';
+import Divider from '@/components/Divider';
 import Hero from '@/components/sections/Hero';
 import Origins from '@/components/sections/Origins';
 import Timeline from '@/components/sections/Timeline';
@@ -14,14 +15,15 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <main>
+      {/* content rides above the ambient field (z-0) */}
+      <main className="relative z-10">
         <Hero />
-        <div className="rule-fade mx-auto max-w-6xl" />
+        <Divider />
         <Origins />
         <Timeline />
         <Laboratory />
         <BreadTypes />
-        <div className="rule-fade mx-auto max-w-6xl" />
+        <Divider />
         <Process />
         <Composition />
         <Baking />

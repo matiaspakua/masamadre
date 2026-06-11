@@ -19,6 +19,7 @@ export default function Hero() {
     ).matches;
     if (reduced || !root.current) return;
 
+    let cleanup: (() => void) | undefined;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       tl.from('.hero-eyebrow', { opacity: 0, y: 16, duration: 0.8, delay: 0.2 })
@@ -45,9 +46,32 @@ export default function Hero() {
           scrub: true,
         },
       });
+
+      // pointer parallax — the jar (nearer) drifts more than the loaf frame
+      const frameX = gsap.quickTo('.hero-visual', 'x', { duration: 0.7, ease: 'power3' });
+      const frameY = gsap.quickTo('.hero-visual', 'y', { duration: 0.7, ease: 'power3' });
+      const jarX = gsap.quickTo('.hero-jar-wrap', 'x', { duration: 0.9, ease: 'power3' });
+      const jarY = gsap.quickTo('.hero-jar-wrap', 'y', { duration: 0.9, ease: 'power3' });
+
+      const onMove = (e: PointerEvent) => {
+        if (e.pointerType !== 'mouse') return;
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        const dx = (e.clientX - cx) / cx;
+        const dy = (e.clientY - cy) / cy;
+        frameX(dx * 14);
+        frameY(dy * 14);
+        jarX(dx * 34);
+        jarY(dy * 34);
+      };
+      window.addEventListener('pointermove', onMove, { passive: true });
+      cleanup = () => window.removeEventListener('pointermove', onMove);
     }, root);
 
-    return () => ctx.revert();
+    return () => {
+      cleanup?.();
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -92,7 +116,7 @@ export default function Hero() {
               loading="eager"
             />
           </div>
-          <div className="absolute -bottom-8 -left-6 w-32 sm:-left-10 sm:w-40">
+          <div className="hero-jar-wrap absolute -bottom-8 -left-6 w-32 sm:-left-10 sm:w-40">
             <StarterJar activity={0.7} rise={0.6} showLabel={false} />
           </div>
         </div>

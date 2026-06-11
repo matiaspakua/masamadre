@@ -204,6 +204,22 @@
 .mm-spin { animation: mm-spin 26s linear infinite; }
 .mm-floatup { animation: mm-floatup 4s ease-in infinite; }
 
+/* Organic divider: a flowing dashed strand. */
+.div-flow,
+.div-flow-rev {
+  stroke-dasharray: 6 10;
+  animation: div-flow 9s linear infinite;
+}
+.div-flow-rev {
+  animation-direction: reverse;
+  animation-duration: 12s;
+}
+@keyframes div-flow {
+  to {
+    stroke-dashoffset: -160;
+  }
+}
+
 /* Hand-drawn timeline sketch: rough stroke that "draws on". */
 .sketch-stroke {
   fill: none;
