@@ -31,8 +31,8 @@ const SEED_STYLE: Record<string, { fill: string; rx: number; ry: number }> = {
   pumpkin: { fill: '#5f7d4a', rx: 2, ry: 3.2 },
 };
 
-// crust colour ramp: pale → golden → deep → dark
-const RAMP = ['#ead9af', '#d59a4e', '#a86a28', '#75431a'];
+// crust colour ramp: pale floury → golden → deep golden-brown → dark crust
+const RAMP = ['#e7dcc0', '#d49a4f', '#b06c25', '#7a4216'];
 
 function hexLerp(a: string, b: string, t: number) {
   const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16));
@@ -48,12 +48,12 @@ function rampColor(level: number) {
 const ease = (t: number) => t * t * (3 - 2 * t);
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
-// fixed scatter over the loaf dome for seed toppings
-const SEED_POS = [
-  [78, 92], [92, 86], [106, 84], [120, 88], [134, 94],
-  [85, 99], [100, 95], [115, 95], [128, 100], [72, 100],
-  [96, 89], [110, 90], [123, 93], [140, 100], [66, 96], [146, 95],
-] as const;
+// horizontal fractions (−1..1 of the half-width) to scatter seeds across the
+// upper crust; the y is derived from the dome curve at render time.
+const SEED_FRAC = [
+  -0.74, -0.58, -0.42, -0.26, -0.1, 0.06, 0.22, 0.38, 0.54, 0.7,
+  -0.66, -0.34, -0.02, 0.3, 0.62, -0.48,
+];
 
 export default function BakeLab() {
   const { lab } = useContent();
@@ -139,17 +139,52 @@ export default function BakeLab() {
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
   // ---- visual state from progress ----
-  const springProg = ease(clamp((progress - 0.12) / 0.3, 0, 1));
-  const brownProg = ease(clamp((progress - 0.12) / 0.7, 0, 1));
-  const cooling = progress > 0.92;
-
   const f = FLOUR[flourType];
-  const loafScale = (0.82 + total / 4200) * (1 + (model.spring / 100) * springProg);
-  const slack = 1 - (hydration - 55) / 150; // wetter = flatter
-  const rx = 46 * (2 - slack) * 0.6;
-  const ry = 30 * slack;
-  const crustColor = hexLerp(f.raw, rampColor(model.crust), brownProg);
-  const earOpen = springProg;
+  const springProg = ease(clamp((progress - 0.1) / 0.34, 0, 1));
+  const brownProg = ease(clamp((progress - 0.18) / 0.66, 0, 1));
+  const cooling = progress > 0.9;
+
+  // Loaf geometry. Centre and the point where it sits on the rack are fixed;
+  // the boule grows from there. Raw dough is slack (wide, low); oven spring
+  // puffs the dome taller than it widens.
+  const cx = 110;
+  const sitY = 140;
+  const sizeK = clamp(0.8 + total / 4200, 0.8, 1.32);
+  const slack = clamp((hydration - 55) / 45, 0, 1); // wetter = flatter raw
+  const grow = springProg * (0.26 + model.spring / 120);
+  const RX = 54 * (1 + slack * 0.06 + grow * 0.14);
+  const RY = 30 * (0.9 - slack * 0.08 + grow);
+
+  // crust colours: a baked base, a lighter top highlight, a gentle edge, and a
+  // darker tone reserved for the scored ear and grounding shadow.
+  const base = hexLerp(f.raw, rampColor(model.crust), brownProg);
+  const light = hexLerp(base, '#fff4e0', 0.34);
+  const edge = hexLerp(base, '#8a5520', 0.26);
+  const dark = hexLerp(base, '#3a1d0a', 0.5);
+  const bloomCol = hexLerp('#ecdfc0', base, brownProg * 0.55); // exposed crumb
+
+  // boule silhouette: domed top, gently rounded bottom
+  const boule = (rx: number, ry: number) => {
+    const my = sitY - ry;
+    const ty = sitY - 2 * ry;
+    return `M ${cx - rx} ${my} C ${cx - rx} ${my - ry * 0.9} ${cx - rx * 0.55} ${ty} ${cx} ${ty} C ${cx + rx * 0.55} ${ty} ${cx + rx} ${my - ry * 0.9} ${cx + rx} ${my} C ${cx + rx} ${my + ry * 0.82} ${cx + rx * 0.6} ${sitY} ${cx} ${sitY} C ${cx - rx * 0.6} ${sitY} ${cx - rx} ${my + ry * 0.82} ${cx - rx} ${my} Z`;
+  };
+  const boulePath = boule(RX, RY);
+  const midY = sitY - RY;
+  const topY = sitY - 2 * RY;
+
+  // scored ear that blooms open with oven spring
+  const ax = cx - RX * 0.42;
+  const ay = midY - RY * 0.12;
+  const bx = cx + RX * 0.3;
+  const by = midY - RY * 0.74;
+  const mx = (ax + bx) / 2;
+  const my2 = (ay + by) / 2;
+  const earLift = 3 + springProg * 10;
+  const earCtrl = `${mx - 10 - earLift * 0.4} ${my2 - 6 - earLift}`;
+  const cutCtrl = `${mx + 7} ${my2 + 5 + springProg * 5}`;
+  const bloomPath = `M ${ax} ${ay} Q ${earCtrl} ${bx} ${by} Q ${cutCtrl} ${ax} ${ay} Z`;
+  const earPath = `M ${ax} ${ay} Q ${earCtrl} ${bx} ${by}`;
 
   const stageLabel =
     phase === 'idle'
@@ -264,103 +299,172 @@ export default function BakeLab() {
       {/* ---- oven ---- */}
       <div className="flex flex-col bg-sink/50 p-7 sm:p-8">
         <div className="relative">
-          <svg viewBox="0 0 200 150" className="w-full">
+          <svg viewBox="0 0 220 170" className="w-full">
             <defs>
-              <radialGradient id="ovenHeat" cx="50%" cy="100%" r="80%">
-                <stop offset="0%" stopColor="#b5562a" stopOpacity={phase === 'idle' ? 0.25 : 0.7} />
-                <stop offset="55%" stopColor="#8a3d1a" stopOpacity="0.15" />
+              <radialGradient id="ovenHeat" cx="50%" cy="100%" r="85%">
+                <stop offset="0%" stopColor="#c45a26" stopOpacity={phase === 'idle' ? 0.3 : 0.78} />
+                <stop offset="55%" stopColor="#8a3d1a" stopOpacity="0.16" />
                 <stop offset="100%" stopColor="#1c130c" stopOpacity="0" />
               </radialGradient>
               <linearGradient id="ovenWall" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#3a2c20" />
-                <stop offset="100%" stopColor="#241a12" />
+                <stop offset="100%" stopColor="#211711" />
+              </linearGradient>
+              {/* crust: highlight top-left, base, dark lower-right — roundness */}
+              <radialGradient id="crustGrad" cx="42%" cy="32%" r="80%">
+                <stop offset="0%" stopColor={light} />
+                <stop offset="72%" stopColor={base} />
+                <stop offset="100%" stopColor={edge} />
+              </radialGradient>
+              {/* soft grounding shadow along the base of the loaf */}
+              <linearGradient id="ridge" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="55%" stopColor={dark} stopOpacity="0" />
+                <stop offset="100%" stopColor={dark} stopOpacity="0.32" />
               </linearGradient>
               <filter id="loafTex">
-                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="6" result="n" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="3" seed="6" result="n" />
+                <feColorMatrix in="n" type="saturate" values="0" />
+              </filter>
+              <filter id="blister">
+                <feTurbulence type="turbulence" baseFrequency="0.14" numOctaves="2" seed="9" result="n" />
                 <feColorMatrix in="n" type="saturate" values="0" />
               </filter>
               <filter id="shimmer">
-                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="1" seed="3" result="t">
-                  <animate attributeName="baseFrequency" dur="9s" values="0.012 0.05;0.014 0.045;0.012 0.05" repeatCount="indefinite" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="1" seed="3" result="tt">
+                  <animate attributeName="baseFrequency" dur="9s" values="0.012 0.05;0.015 0.044;0.012 0.05" repeatCount="indefinite" />
                 </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="t" scale="3" />
+                <feDisplacementMap in="SourceGraphic" in2="tt" scale="3" />
               </filter>
               <clipPath id="loafClip">
-                <ellipse cx="100" cy="112" rx={rx} ry={ry} transform={`translate(100 112) scale(${loafScale}) translate(-100 -112)`} />
+                <path
+                  d={boulePath}
+                  transform={`translate(${cx} ${sitY}) scale(${sizeK}) translate(${-cx} ${-sitY})`}
+                />
               </clipPath>
             </defs>
 
             {/* oven chamber */}
-            <rect x="6" y="6" width="188" height="138" rx="10" fill="url(#ovenWall)" />
-            <rect x="6" y="6" width="188" height="138" rx="10" fill="url(#ovenHeat)" />
-            {/* shimmer veil */}
+            <rect x="6" y="6" width="208" height="158" rx="12" fill="url(#ovenWall)" />
+            <rect x="6" y="6" width="208" height="158" rx="12" fill="url(#ovenHeat)" />
+            {/* back-wall seams */}
+            <g stroke="#000" strokeOpacity="0.12" strokeWidth="1">
+              <line x1="6" y1="52" x2="214" y2="52" />
+              <line x1="6" y1="100" x2="214" y2="100" />
+            </g>
+            {/* shimmer veil over the hot floor */}
             {phase === 'baking' && (
-              <rect x="10" y="70" width="180" height="70" fill="#b5562a" opacity="0.12" filter="url(#shimmer)" />
+              <rect x="10" y="80" width="200" height="80" fill="#c45a26" opacity="0.1" filter="url(#shimmer)" />
             )}
             {/* rack */}
-            <g stroke="#6a513a" strokeWidth="1.4" opacity="0.7">
-              <line x1="22" y1="126" x2="178" y2="126" />
+            <g stroke="#6a513a" strokeWidth="1.6" opacity="0.7">
+              <line x1="20" y1="142" x2="200" y2="142" />
             </g>
             {/* heat element glow */}
-            <ellipse cx="100" cy="140" rx="80" ry="8" fill="#c0741a" opacity={phase === 'idle' ? 0.18 : 0.4 + 0.2 * Math.sin(progress * 30)} />
+            <ellipse
+              cx={cx}
+              cy="158"
+              rx="92"
+              ry="9"
+              fill="#d06a1c"
+              opacity={phase === 'idle' ? 0.2 : 0.42 + 0.18 * Math.sin(progress * 26)}
+            />
 
-            {/* loaf shadow */}
-            <ellipse cx="100" cy="126" rx={rx * loafScale * 0.95} ry="5" fill="#000" opacity="0.3" />
+            {/* contact shadow */}
+            <ellipse cx={cx} cy={sitY + 2} rx={RX * sizeK * 0.96} ry="5" fill="#000" opacity="0.32" />
 
-            {/* loaf */}
-            <g transform={`translate(100 112) scale(${loafScale}) translate(-100 -112)`}>
-              <ellipse cx="100" cy="112" rx={rx} ry={ry} fill={crustColor} />
-              {/* baked sheen */}
-              <ellipse cx={100 - rx * 0.25} cy={112 - ry * 0.4} rx={rx * 0.55} ry={ry * 0.4} fill="#fff" opacity={0.12 + brownProg * 0.12} />
-            </g>
+            {/* ---- the loaf (grows from the rack) ---- */}
+            <g transform={`translate(${cx} ${sitY}) scale(${sizeK}) translate(${-cx} ${-sitY})`}>
+              {/* body */}
+              <path d={boulePath} fill="url(#crustGrad)" />
 
-            {/* crust / flour texture, clipped to loaf */}
-            <g clipPath="url(#loafClip)">
-              {/* flour dusting (burns off while baking) */}
-              <rect x="50" y="78" width="100" height="60" filter="url(#loafTex)" style={{ mixBlendMode: 'screen' }} opacity={(1 - brownProg) * 0.45} />
-              {/* crust blister/char (builds as it browns) */}
-              <rect x="50" y="78" width="100" height="60" filter="url(#loafTex)" style={{ mixBlendMode: 'multiply' }} opacity={brownProg * 0.5} />
-            </g>
+              {/* textures, ear & seeds clipped to the body */}
+              <g clipPath="url(#loafClip)">
+                {/* ridge browning on top */}
+                <path d={boulePath} fill="url(#ridge)" />
+                {/* flour dusting — heavy on raw, burns off as it bakes */}
+                <rect
+                  x={cx - RX - 4}
+                  y={topY - 2}
+                  width={RX * 2 + 8}
+                  height={RY * 2 + 6}
+                  filter="url(#loafTex)"
+                  style={{ mixBlendMode: 'screen' }}
+                  opacity={0.18 + (1 - brownProg) * 0.5}
+                />
+                {/* crust blistering / char builds with browning */}
+                <rect
+                  x={cx - RX - 4}
+                  y={topY - 2}
+                  width={RX * 2 + 8}
+                  height={RY * 2 + 6}
+                  filter="url(#blister)"
+                  style={{ mixBlendMode: 'multiply' }}
+                  opacity={brownProg * 0.42}
+                />
+                {/* wet sheen from oven steam, fades as crust sets */}
+                <ellipse
+                  cx={cx - RX * 0.2}
+                  cy={topY + RY * 0.5}
+                  rx={RX * 0.7}
+                  ry={RY * 0.55}
+                  fill="#fff"
+                  opacity={clamp(steam * (1 - brownProg) * 0.5 + brownProg * 0.08, 0, 0.5)}
+                />
 
-            {/* scoring ear */}
-            <g transform={`translate(100 112) scale(${loafScale}) translate(-100 -112)`}>
+                {/* seeds across the upper crust */}
+                {seedList.length > 0 &&
+                  SEED_FRAC.map((fx, i) => {
+                    const sd = seedList[i % seedList.length];
+                    const st = SEED_STYLE[sd];
+                    const sxp = cx + fx * RX * 0.92;
+                    const syp = topY + RY * 0.45 + fx * fx * RY * 0.7;
+                    return (
+                      <ellipse
+                        key={i}
+                        cx={sxp}
+                        cy={syp}
+                        rx={st.rx}
+                        ry={st.ry}
+                        fill={st.fill}
+                        transform={`rotate(${(i * 41) % 110} ${sxp} ${syp})`}
+                        opacity="0.9"
+                      />
+                    );
+                  })}
+              </g>
+
+              {/* scoring bloom — the open cut, lighter exposed crumb */}
+              <path d={bloomPath} fill={bloomCol} opacity={0.55 + springProg * 0.45} />
+              <path d={bloomPath} fill="none" stroke={dark} strokeWidth="0.8" opacity="0.5" />
+              {/* the ear — a lifted crust flap */}
+              <g transform={`translate(0 ${-springProg * 2})`}>
+                <path
+                  d={earPath}
+                  fill="none"
+                  stroke={dark}
+                  strokeWidth={1.6 + springProg * 1.6}
+                  strokeLinecap="round"
+                  opacity={0.55 + brownProg * 0.35}
+                />
+                <path
+                  d={earPath}
+                  fill="none"
+                  stroke={light}
+                  strokeWidth="0.7"
+                  strokeLinecap="round"
+                  opacity={springProg * 0.6}
+                  transform="translate(0 1.4)"
+                />
+              </g>
+
+              {/* a couple of faint secondary scores for character */}
               <path
-                d={`M${100 - rx * 0.5} ${112 - ry * 0.25} Q100 ${112 - ry * 0.55} ${100 + rx * 0.5} ${112 - ry * 0.2}`}
+                d={`M ${cx - RX * 0.1} ${midY - RY * 0.2} Q ${cx + RX * 0.3} ${midY - RY * 0.15} ${cx + RX * 0.55} ${midY + RY * 0.15}`}
                 fill="none"
-                stroke="#5c3414"
-                strokeWidth="1.4"
-                opacity={0.5 + brownProg * 0.3}
+                stroke={dark}
+                strokeWidth="0.7"
+                opacity={0.25 + brownProg * 0.25}
               />
-              {/* lifted ear flap */}
-              <path
-                d={`M${100 - rx * 0.42} ${112 - ry * 0.22} Q100 ${112 - ry * (0.55 + earOpen * 0.5)} ${100 + rx * 0.42} ${112 - ry * 0.18}`}
-                fill={hexLerp(crustColor, '#5c3414', 0.25)}
-                opacity={earOpen * 0.9}
-              />
-            </g>
-
-            {/* seeds on the dome */}
-            <g transform={`translate(100 112) scale(${loafScale}) translate(-100 -112)`}>
-              {seedList.length > 0 &&
-                SEED_POS.map(([sx, sy], i) => {
-                  const sd = seedList[i % seedList.length];
-                  const st = SEED_STYLE[sd];
-                  // keep seeds within the dome
-                  const dxn = (sx - 100) / rx;
-                  if (Math.abs(dxn) > 1.05) return null;
-                  return (
-                    <ellipse
-                      key={i}
-                      cx={sx}
-                      cy={sy - (1 - dxn * dxn) * ry * 0.5}
-                      rx={st.rx}
-                      ry={st.ry}
-                      fill={st.fill}
-                      transform={`rotate(${(i * 37) % 90} ${sx} ${sy})`}
-                      opacity="0.92"
-                    />
-                  );
-                })}
             </g>
           </svg>
 
