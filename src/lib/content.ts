@@ -31,6 +31,15 @@ export type Microbe = {
   makes: string;
 };
 
+export type MicroLevel = {
+  key: string;
+  mag: string;
+  scale: string;
+  title: string;
+  body: string;
+  notes: string[];
+};
+
 export type ProcessStep = { n: number; name: string; detail: string };
 export type OvenChange = { temp: string; title: string; body: string };
 export type CompositionFact = { key: string; title: string; body: string };
@@ -101,6 +110,13 @@ export interface SiteContent {
       total: string;
       grams: string;
       note: string;
+    };
+    micro: {
+      heading: string;
+      sub: string;
+      magLabel: string;
+      scaleLabel: string;
+      levels: MicroLevel[];
     };
   };
   breadTypes: {
@@ -246,6 +262,19 @@ const es: SiteContent = {
       total: 'Masa total',
       grams: 'g',
       note: 'Todo se calcula como porcentaje del peso de la harina. Ajusta los controles y observa cómo cambia la receta.',
+    },
+    micro: {
+      heading: 'Del pan a la molécula',
+      sub: 'Microscopio · acerca para explorar',
+      magLabel: 'Aumento',
+      scaleLabel: 'Escala',
+      levels: [
+        { key: 'loaf', mag: '1×', scale: '≈ 12 cm', title: 'La hogaza', body: 'A simple vista: corteza, miga y greña. La corteza es azúcar caramelizado; la miga, una espuma sólida de gas atrapado. El carácter del pan empieza aquí.', notes: ['Corteza caramelizada', 'Greña y forma', 'Miga abierta y elástica'] },
+        { key: 'crumb', mag: '12×', scale: '≈ 5 mm', title: 'La miga', body: 'Acercándonos, la miga es una red de alvéolos: burbujas de dióxido de carbono que la levadura exhaló, atrapadas por paredes de masa que el calor fijó.', notes: ['Alvéolos de CO₂', 'Paredes de masa', 'La red que retiene el gas'] },
+        { key: 'gluten', mag: '250×', scale: '≈ 200 µm', title: 'Gluten y almidón', body: 'Las paredes son gluten: una malla elástica de glutenina y gliadina hidratadas. Entre sus hilos, gránulos de almidón gelatinizado dan cuerpo a la estructura.', notes: ['Malla de gluten (glutenina + gliadina)', 'Gránulos de almidón', 'Elasticidad y retención de agua'] },
+        { key: 'microbes', mag: '3000×', scale: '≈ 20 µm', title: 'Los microbios', body: 'En la masa viva: levaduras en gemación y bacterias lácticas en forma de bacilo. Las primeras producen CO₂; las segundas, ácido láctico que baja el pH.', notes: ['Levadura en gemación (Saccharomyces)', 'Bacterias lácticas (Lactobacillus)', 'CO₂ + ácido láctico'] },
+        { key: 'molecular', mag: '60 000×', scale: '≈ 2 nm', title: 'El nivel molecular', body: 'Hasta la materia misma: cadenas de amilosa y amilopectina (almidón), proteínas plegadas del gluten y moléculas de ácido láctico. Aquí nacen la estructura y el sabor.', notes: ['Amilosa y amilopectina', 'Proteína de gluten plegada', 'Ácido láctico · C₃H₆O₃'] },
+      ],
     },
   },
   breadTypes: {
@@ -435,6 +464,19 @@ const en: SiteContent = {
       total: 'Total dough',
       grams: 'g',
       note: "Everything is computed as a percentage of the flour weight. Adjust the controls and watch the recipe rebalance.",
+    },
+    micro: {
+      heading: 'From loaf to molecule',
+      sub: 'Microscope · zoom to explore',
+      magLabel: 'Magnification',
+      scaleLabel: 'Scale',
+      levels: [
+        { key: 'loaf', mag: '1×', scale: '≈ 12 cm', title: 'The loaf', body: 'To the naked eye: crust, crumb, and ear. The crust is caramelised sugar; the crumb, a solid foam of trapped gas. The bread’s character begins here.', notes: ['Caramelised crust', 'Scoring & shape', 'Open, elastic crumb'] },
+        { key: 'crumb', mag: '12×', scale: '≈ 5 mm', title: 'The crumb', body: 'Closer in, the crumb is a web of alveoli — bubbles of carbon dioxide the yeast exhaled, caught by dough walls that the oven set.', notes: ['CO₂ alveoli', 'Dough walls', 'The web that holds the gas'] },
+        { key: 'gluten', mag: '250×', scale: '≈ 200 µm', title: 'Gluten & starch', body: 'Those walls are gluten: an elastic mesh of hydrated glutenin and gliadin. Threaded through it, gelatinised starch granules give the structure body.', notes: ['Gluten mesh (glutenin + gliadin)', 'Starch granules', 'Elasticity & water retention'] },
+        { key: 'microbes', mag: '3000×', scale: '≈ 20 µm', title: 'The microbes', body: 'Inside the living dough: budding yeast and rod-shaped lactic acid bacteria. The first make CO₂; the second make lactic acid that drops the pH.', notes: ['Budding yeast (Saccharomyces)', 'Lactic acid bacteria (Lactobacillus)', 'CO₂ + lactic acid'] },
+        { key: 'molecular', mag: '60,000×', scale: '≈ 2 nm', title: 'The molecular level', body: 'Down to matter itself: chains of amylose and amylopectin (starch), folded gluten proteins, and lactic acid molecules. Structure and flavour are born here.', notes: ['Amylose & amylopectin', 'Folded gluten protein', 'Lactic acid · C₃H₆O₃'] },
+      ],
     },
   },
   breadTypes: {

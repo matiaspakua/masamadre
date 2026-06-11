@@ -167,6 +167,54 @@
   animation-iteration-count: infinite;
 }
 
+/* Microscope scene motion — subtle life inside the lens. */
+.mm-anim {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes mm-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(2.5px, -2px); }
+}
+@keyframes mm-drift2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-3px, 2.5px); }
+}
+@keyframes mm-wobble {
+  0%, 100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(2.5deg); }
+}
+@keyframes mm-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.07); opacity: 1; }
+}
+@keyframes mm-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes mm-floatup {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-46px); opacity: 0; }
+}
+.mm-drift { animation: mm-drift 6s ease-in-out infinite; }
+.mm-drift2 { animation: mm-drift2 7s ease-in-out infinite; }
+.mm-wobble { animation: mm-wobble 5s ease-in-out infinite; }
+.mm-pulse { animation: mm-pulse 4s ease-in-out infinite; }
+.mm-spin { animation: mm-spin 26s linear infinite; }
+.mm-floatup { animation: mm-floatup 4s ease-in infinite; }
+
+/* Hand-drawn timeline sketch: rough stroke that "draws on". */
+.sketch-stroke {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* pathLength=1, so a single dash spans the whole path; GSAP animates the
+     offset 1→0 to "draw" it on. Default offset 0 = fully visible (no-JS /
+     reduced-motion safe). */
+  stroke-dasharray: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

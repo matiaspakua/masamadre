@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useContent } from '@/lib/i18n';
+import TimelineSketch from '@/components/TimelineSketch';
 
 // The timeline is a horizontal "historical instrument": the section pins while
 // the eras scroll sideways, tied to vertical scroll progress. Each card lifts
@@ -56,6 +57,27 @@ export default function Timeline() {
             scrub: true,
           },
         });
+        // Hand-drawn sketch "draws on" as the card scrolls into view.
+        const strokes = card.querySelectorAll('.sketch-stroke');
+        if (strokes.length) {
+          gsap.fromTo(
+            strokes,
+            { strokeDashoffset: 1 },
+            {
+              strokeDashoffset: 0,
+              ease: 'power1.inOut',
+              stagger: 0.06,
+              scrollTrigger: {
+                trigger: card,
+                containerAnimation: tween,
+                start: 'left 82%',
+                end: 'left 48%',
+                scrub: true,
+              },
+            },
+          );
+        }
+
         // Parallax on the giant era numeral inside each card.
         const numeral = card.querySelector('.tl-era');
         if (numeral) {
@@ -107,7 +129,7 @@ export default function Timeline() {
           className="absolute top-0 flex h-full items-center gap-8 pl-6 pr-[12vw] sm:gap-12 sm:pl-10 lg:pl-16"
           style={{ width: 'max-content' }}
         >
-          {timeline.events.map((ev) => (
+          {timeline.events.map((ev, i) => (
             <article
               key={ev.era}
               className="tl-card relative flex h-[58vh] w-[78vw] shrink-0 flex-col justify-between overflow-hidden border border-line bg-surface p-8 shadow-[0_20px_50px_-40px_rgba(42,32,24,0.6)] sm:w-[440px] sm:p-10"
@@ -118,9 +140,15 @@ export default function Timeline() {
               </span>
 
               <div className="relative flex items-start justify-between">
-                <span className="font-display text-5xl leading-none text-line">
-                  {ev.era}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="font-display text-5xl leading-none text-line">
+                    {ev.era}
+                  </span>
+                  <TimelineSketch
+                    eraIndex={i}
+                    className="h-14 w-14 sm:h-16 sm:w-16"
+                  />
+                </div>
                 <div className="text-right">
                   <p className="lab-readout text-xs">{ev.year}</p>
                   <p className="mt-1 font-mono text-[0.62rem] uppercase tracking-[0.14em] text-ash">
