@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --char: #16110d;
+  --linen: #ede4d3;
+  --levain: #e8a33d;
+  --phosphor: #7fd6c7;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--char);
+    color: var(--linen);
+    font-family: var(--font-body), system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Lenis smooth-scroll plumbing */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  ::selection {
+    background: var(--levain);
+    color: var(--char);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--phosphor);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Fine grain/flour-dust noise overlaid on the whole page for tactility. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .eyebrow {
+    @apply font-mono text-[0.7rem] uppercase tracking-eyebrow text-ash;
+  }
+
+  .lab-readout {
+    @apply font-mono uppercase tracking-[0.18em] text-phosphor;
+  }
+
+  /* A hairline that fades, used as a section rule / archival divider. */
+  .rule-fade {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      theme('colors.crumb') 12%,
+      theme('colors.crumb') 88%,
+      transparent
+    );
+  }
+
+  .section-pad {
+    @apply px-6 py-28 sm:px-10 md:py-40 lg:px-16;
+  }
+
+  /* Radial warmth behind the hero & lab — the "specimen under light" glow. */
+  .glow-levain {
+    background: radial-gradient(
+      ellipse 60% 50% at 50% 45%,
+      rgba(232, 163, 61, 0.22),
+      transparent 70%
+    );
+  }
+
+  /* Display headline treatment with optical character. */
+  .display {
+    @apply font-display font-light leading-[0.95] tracking-[-0.01em];
+    font-optical-sizing: auto;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    will-change: transform, opacity;
+  }
+}
+
+/* A rising CO2 bubble in the starter jar. */
+.bubble {
+  position: absolute;
+  bottom: 0;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 32% 30%,
+    rgba(255, 255, 255, 0.55),
+    rgba(232, 163, 61, 0.18) 55%,
+    transparent 72%
+  );
+  box-shadow: 0 0 8px rgba(232, 163, 61, 0.25);
+  animation-name: rise;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .bubble {
+    display: none;
+  }
+}
