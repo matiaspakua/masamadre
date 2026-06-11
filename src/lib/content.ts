@@ -118,6 +118,37 @@ export interface SiteContent {
       scaleLabel: string;
       levels: MicroLevel[];
     };
+    bake: {
+      heading: string;
+      sub: string;
+      flourTypeLabel: string;
+      seedsLabel: string;
+      tempLabel: string;
+      steamLabel: string;
+      bakeBtn: string;
+      bakingBtn: string;
+      resetBtn: string;
+      clock: string;
+      stages: {
+        load: string;
+        spring: string;
+        crust: string;
+        done: string;
+        cooling: string;
+      };
+      result: {
+        title: string;
+        bakeTime: string;
+        spring: string;
+        crust: string;
+        crumb: string;
+        min: string;
+      };
+      crustLevels: string[];
+      crumbLevels: string[];
+      flours: { key: string; name: string; note: string }[];
+      seeds: { key: string; name: string }[];
+    };
   };
   breadTypes: {
     index: string;
@@ -274,6 +305,49 @@ const es: SiteContent = {
         { key: 'gluten', mag: '250×', scale: '≈ 200 µm', title: 'Gluten y almidón', body: 'Las paredes son gluten: una malla elástica de glutenina y gliadina hidratadas. Entre sus hilos, gránulos de almidón gelatinizado dan cuerpo a la estructura.', notes: ['Malla de gluten (glutenina + gliadina)', 'Gránulos de almidón', 'Elasticidad y retención de agua'] },
         { key: 'microbes', mag: '3000×', scale: '≈ 20 µm', title: 'Los microbios', body: 'En la masa viva: levaduras en gemación y bacterias lácticas en forma de bacilo. Las primeras producen CO₂; las segundas, ácido láctico que baja el pH.', notes: ['Levadura en gemación (Saccharomyces)', 'Bacterias lácticas (Lactobacillus)', 'CO₂ + ácido láctico'] },
         { key: 'molecular', mag: '60 000×', scale: '≈ 2 nm', title: 'El nivel molecular', body: 'Hasta la materia misma: cadenas de amilosa y amilopectina (almidón), proteínas plegadas del gluten y moléculas de ácido láctico. Aquí nacen la estructura y el sabor.', notes: ['Amilosa y amilopectina', 'Proteína de gluten plegada', 'Ácido láctico · C₃H₆O₃'] },
+      ],
+    },
+    bake: {
+      heading: 'El horno · simulador',
+      sub: 'Arma tu fórmula y hornéala',
+      flourTypeLabel: 'Tipo de harina',
+      seedsLabel: 'Semillas',
+      tempLabel: 'Temperatura',
+      steamLabel: 'Vapor',
+      bakeBtn: 'Hornear',
+      bakingBtn: 'Horneando…',
+      resetBtn: 'Otra hornada',
+      clock: 'min',
+      stages: {
+        load: 'Al horno',
+        spring: 'Subida en horno',
+        crust: 'Formando corteza',
+        done: 'Horneado',
+        cooling: 'Enfriando',
+      },
+      result: {
+        title: 'Resultado',
+        bakeTime: 'Tiempo de horneado',
+        spring: 'Subida',
+        crust: 'Corteza',
+        crumb: 'Miga',
+        min: 'min',
+      },
+      crustLevels: ['Pálida', 'Dorada', 'Profunda', 'Intensa'],
+      crumbLevels: ['Cerrada', 'Pareja', 'Abierta', 'Salvaje'],
+      flours: [
+        { key: 'white', name: 'Harina blanca', note: 'Fuerte, gran subida, miga clara.' },
+        { key: 'wholewheat', name: 'Trigo integral', note: 'Más fibra, sube menos, tuesta antes.' },
+        { key: 'spelt', name: 'Espelta', note: 'Nuez y dulzor, gluten delicado.' },
+        { key: 'rye', name: 'Centeno', note: 'Densa y oscura, muy húmeda.' },
+        { key: 'oat', name: 'Avena', note: 'Suave y pálida, mejor mezclada.' },
+      ],
+      seeds: [
+        { key: 'sesame', name: 'Sésamo' },
+        { key: 'poppy', name: 'Amapola' },
+        { key: 'sunflower', name: 'Girasol' },
+        { key: 'flax', name: 'Lino' },
+        { key: 'pumpkin', name: 'Calabaza' },
       ],
     },
   },
@@ -476,6 +550,49 @@ const en: SiteContent = {
         { key: 'gluten', mag: '250×', scale: '≈ 200 µm', title: 'Gluten & starch', body: 'Those walls are gluten: an elastic mesh of hydrated glutenin and gliadin. Threaded through it, gelatinised starch granules give the structure body.', notes: ['Gluten mesh (glutenin + gliadin)', 'Starch granules', 'Elasticity & water retention'] },
         { key: 'microbes', mag: '3000×', scale: '≈ 20 µm', title: 'The microbes', body: 'Inside the living dough: budding yeast and rod-shaped lactic acid bacteria. The first make CO₂; the second make lactic acid that drops the pH.', notes: ['Budding yeast (Saccharomyces)', 'Lactic acid bacteria (Lactobacillus)', 'CO₂ + lactic acid'] },
         { key: 'molecular', mag: '60,000×', scale: '≈ 2 nm', title: 'The molecular level', body: 'Down to matter itself: chains of amylose and amylopectin (starch), folded gluten proteins, and lactic acid molecules. Structure and flavour are born here.', notes: ['Amylose & amylopectin', 'Folded gluten protein', 'Lactic acid · C₃H₆O₃'] },
+      ],
+    },
+    bake: {
+      heading: 'The oven · simulator',
+      sub: 'Build your formula and bake it',
+      flourTypeLabel: 'Flour',
+      seedsLabel: 'Seeds',
+      tempLabel: 'Temperature',
+      steamLabel: 'Steam',
+      bakeBtn: 'Bake',
+      bakingBtn: 'Baking…',
+      resetBtn: 'Bake again',
+      clock: 'min',
+      stages: {
+        load: 'Into the oven',
+        spring: 'Oven spring',
+        crust: 'Crust forming',
+        done: 'Baked',
+        cooling: 'Cooling',
+      },
+      result: {
+        title: 'Result',
+        bakeTime: 'Bake time',
+        spring: 'Oven spring',
+        crust: 'Crust',
+        crumb: 'Crumb',
+        min: 'min',
+      },
+      crustLevels: ['Pale', 'Golden', 'Deep', 'Dark'],
+      crumbLevels: ['Tight', 'Even', 'Open', 'Wild'],
+      flours: [
+        { key: 'white', name: 'White flour', note: 'Strong, big rise, pale crumb.' },
+        { key: 'wholewheat', name: 'Whole wheat', note: 'More fibre, less rise, browns sooner.' },
+        { key: 'spelt', name: 'Spelt', note: 'Nutty and sweet, delicate gluten.' },
+        { key: 'rye', name: 'Rye', note: 'Dense and dark, very moist.' },
+        { key: 'oat', name: 'Oat', note: 'Soft and pale, best blended.' },
+      ],
+      seeds: [
+        { key: 'sesame', name: 'Sesame' },
+        { key: 'poppy', name: 'Poppy' },
+        { key: 'sunflower', name: 'Sunflower' },
+        { key: 'flax', name: 'Flax' },
+        { key: 'pumpkin', name: 'Pumpkin' },
       ],
     },
   },

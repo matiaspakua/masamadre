@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import StarterJar from '@/components/lab/StarterJar';
 import PhMeter from '@/components/lab/PhMeter';
-import DoughCalculator from '@/components/lab/DoughCalculator';
+import BakeLab from '@/components/lab/BakeLab';
 import BreadMicroscope from '@/components/lab/BreadMicroscope';
 import { useReveal } from '@/lib/useReveal';
 import { useContent } from '@/lib/i18n';
@@ -173,9 +173,13 @@ export default function Laboratory() {
           <BreadMicroscope />
         </div>
 
-        {/* Dough calculator */}
+        {/* Dough calculator + bake simulator */}
         <div className="reveal mt-8">
-          <DoughCalculator />
+          <div className="mb-5 flex items-baseline gap-4">
+            <span className="h-px w-10 bg-line" />
+            <h3 className="font-display text-2xl text-ink">{lab.bake.heading}</h3>
+          </div>
+          <BakeLab />
         </div>
       </div>
     </section>
