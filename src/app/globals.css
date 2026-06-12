@@ -220,6 +220,34 @@
   }
 }
 
+/* Oven humidity: condensation beads of water clinging inside the chamber. */
+.mm-drop {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 36% 30%,
+    rgba(255, 255, 255, 0.9),
+    rgba(206, 228, 235, 0.45) 55%,
+    rgba(150, 180, 195, 0.12) 100%
+  );
+  box-shadow:
+    inset 0 -1px 1.5px rgba(255, 255, 255, 0.6),
+    0 0 3px rgba(180, 210, 220, 0.4);
+}
+.mm-drop-drip {
+  animation: mm-drip 3.4s ease-in infinite;
+}
+@keyframes mm-drip {
+  0%,
+  62% {
+    transform: translateY(0) scaleY(1);
+  }
+  100% {
+    transform: translateY(16px) scaleY(1.4);
+    opacity: 0;
+  }
+}
+
 /* Recipe-book flipbook: leaves rotate around the spine in 3D. */
 .mm-book {
   perspective: 2400px;

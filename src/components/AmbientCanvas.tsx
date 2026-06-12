@@ -2,12 +2,12 @@
 
 import { useEffect, useRef } from 'react';
 
-// A living biological field rendered behind the whole page. Three layers, all
-// thematic: drifting connected nodes (a gluten / molecular mesh), floating
-// flour dust, and CO2 bubbles rising like a ferment. The mesh colour lerps
-// across the scroll (amber → ferment teal → oven ember) so the atmosphere
-// shifts with the narrative. One rAF loop, particle counts capped, paused when
-// the tab is hidden, and disabled entirely for reduced-motion users.
+// A living bakery field rendered behind the whole page. The motifs are all of
+// the craft: ears of wheat and loose grains drifting and turning, a haze of
+// flour dust, and CO2 bubbles rising like a ferment. Their tint lerps across
+// the scroll (amber → ferment teal → oven ember) so the atmosphere shifts with
+// the narrative. One rAF loop, counts capped, paused when the tab is hidden,
+// and disabled entirely for reduced-motion users.
 export default function AmbientCanvas() {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -25,15 +25,9 @@ export default function AmbientCanvas() {
     let scrollP = 0;
 
     const small = window.innerWidth < 760;
-    const NODES = small ? 26 : 54;
-    const DUST = small ? 26 : 64;
-    const LINK = (small ? 120 : 160) * dpr;
-
-    type P = { x: number; y: number; vx: number; vy: number; r: number; ph: number };
-    const nodes: P[] = [];
-    const dust: P[] = [];
-    type B = { x: number; y: number; r: number; v: number; a: number };
-    const bubbles: B[] = [];
+    const EARS = small ? 4 : 8;
+    const GRAINS = small ? 12 : 26;
+    const DUST = small ? 24 : 56;
     const mouse = { x: -9999, y: -9999 };
 
     // amber → ferment teal → oven ember
@@ -49,20 +43,47 @@ export default function AmbientCanvas() {
       const t = seg - i;
       return stops[0].map((_, k) => Math.round(lerp(stops[i][k], stops[i + 1][k], t)));
     };
-
     const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
+    type Motif = {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      rot: number;
+      vr: number;
+      s: number;
+    };
+    type Dust = { x: number; y: number; vx: number; vy: number; r: number };
+    type Bubble = { x: number; y: number; r: number; v: number; a: number };
+    const ears: Motif[] = [];
+    const grains: Motif[] = [];
+    const dust: Dust[] = [];
+    const bubbles: Bubble[] = [];
+
     function seed() {
-      nodes.length = 0;
+      ears.length = 0;
+      grains.length = 0;
       dust.length = 0;
-      for (let i = 0; i < NODES; i++)
-        nodes.push({
+      for (let i = 0; i < EARS; i++)
+        ears.push({
           x: Math.random() * w,
           y: Math.random() * h,
-          vx: rand(-0.12, 0.12) * dpr,
-          vy: rand(-0.12, 0.12) * dpr,
-          r: rand(0.9, 2.4) * dpr,
-          ph: Math.random() * Math.PI * 2,
+          vx: rand(-0.06, 0.06) * dpr,
+          vy: rand(-0.05, 0.05) * dpr,
+          rot: rand(0, Math.PI * 2),
+          vr: rand(-0.0016, 0.0016),
+          s: rand(0.85, 1.7) * dpr,
+        });
+      for (let i = 0; i < GRAINS; i++)
+        grains.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: rand(-0.1, 0.1) * dpr,
+          vy: rand(-0.08, 0.08) * dpr,
+          rot: rand(0, Math.PI * 2),
+          vr: rand(-0.01, 0.01),
+          s: rand(0.7, 1.5) * dpr,
         });
       for (let i = 0; i < DUST; i++)
         dust.push({
@@ -71,7 +92,6 @@ export default function AmbientCanvas() {
           vx: rand(-0.05, 0.05) * dpr,
           vy: rand(-0.16, -0.04) * dpr,
           r: rand(0.5, 1.6) * dpr,
-          ph: 0,
         });
     }
 
@@ -97,13 +117,87 @@ export default function AmbientCanvas() {
       mouse.y = -9999;
     }
 
-    let t = 0;
+    // a single almond grain (filled)
+    function grainShape(rx: number, ry: number) {
+      ctx!.beginPath();
+      ctx!.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+      ctx!.fill();
+    }
+
+    // an ear of wheat: a curved stalk with rows of grains and awns
+    function drawEar(m: Motif, alpha: number, col: string) {
+      const s = m.s;
+      ctx!.save();
+      ctx!.translate(m.x, m.y);
+      ctx!.rotate(m.rot);
+      ctx!.strokeStyle = `rgba(${col},${alpha})`;
+      ctx!.fillStyle = `rgba(${col},${alpha})`;
+      ctx!.lineWidth = 1 * s;
+      const top = -24 * s;
+      const bot = 20 * s;
+      // stalk
+      ctx!.beginPath();
+      ctx!.moveTo(0, bot);
+      ctx!.quadraticCurveTo(3 * s, 0, 0, top);
+      ctx!.stroke();
+      // grain head (upper section)
+      const rows = 5;
+      const headBot = 4 * s;
+      for (let i = 0; i < rows; i++) {
+        const tt = i / (rows - 1);
+        const gy = headBot + (top + 3 * s - headBot) * tt;
+        const grow = 1 - tt * 0.5;
+        for (const side of [-1, 1]) {
+          ctx!.save();
+          ctx!.translate(side * 3 * s, gy);
+          ctx!.rotate(side * 0.7);
+          grainShape(1.5 * s * grow, 3.4 * s * grow);
+          ctx!.restore();
+          // awn
+          ctx!.beginPath();
+          ctx!.moveTo(side * 3.5 * s, gy - 2 * s);
+          ctx!.lineTo(side * 8 * s * grow, gy - 9 * s * grow);
+          ctx!.stroke();
+        }
+      }
+      // tip grain
+      ctx!.save();
+      ctx!.translate(0, top + 1 * s);
+      grainShape(1.6 * s, 4 * s);
+      ctx!.restore();
+      ctx!.restore();
+    }
+
+    function drift(m: Motif) {
+      // gentle pointer push
+      const dx = m.x - mouse.x;
+      const dy = m.y - mouse.y;
+      const d2 = dx * dx + dy * dy;
+      const R = 150 * dpr;
+      if (d2 < R * R) {
+        const d = Math.sqrt(d2) || 1;
+        const f = (1 - d / R) * 0.4;
+        m.vx += (dx / d) * f;
+        m.vy += (dy / d) * f;
+      }
+      m.x += m.vx;
+      m.y += m.vy;
+      m.vx *= 0.99;
+      m.vy *= 0.99;
+      m.rot += m.vr;
+      const pad = 40 * dpr;
+      if (m.x < -pad) m.x = w + pad;
+      if (m.x > w + pad) m.x = -pad;
+      if (m.y < -pad) m.y = h + pad;
+      if (m.y > h + pad) m.y = -pad;
+    }
+
     function frame() {
-      t += 0.016;
       const [r, g, b] = accentAt(scrollP);
+      const col = `${r},${g},${b}`;
       ctx!.clearRect(0, 0, w, h);
 
-      // flour dust
+      // flour dust (back)
       for (const d of dust) {
         d.x += d.vx;
         d.y += d.vy;
@@ -115,65 +209,35 @@ export default function AmbientCanvas() {
         if (d.x > w + 4) d.x = -4;
         ctx!.beginPath();
         ctx!.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(150,130,100,0.30)`;
+        ctx!.fillStyle = `rgba(150,130,100,0.28)`;
         ctx!.fill();
       }
 
-      // mesh nodes
-      for (const n of nodes) {
-        // pointer repel
-        const dx = n.x - mouse.x;
-        const dy = n.y - mouse.y;
-        const d2 = dx * dx + dy * dy;
-        const R = 130 * dpr;
-        if (d2 < R * R) {
-          const d = Math.sqrt(d2) || 1;
-          const f = (1 - d / R) * 0.6;
-          n.vx += (dx / d) * f;
-          n.vy += (dy / d) * f;
-        }
-        n.x += n.vx;
-        n.y += n.vy;
-        n.vx *= 0.98;
-        n.vy *= 0.98;
-        // gentle baseline drift so they never fully stop
-        n.vx += rand(-0.01, 0.01) * dpr;
-        n.vy += rand(-0.01, 0.01) * dpr;
-        if (n.x < 0 || n.x > w) n.vx *= -1;
-        if (n.y < 0 || n.y > h) n.vy *= -1;
-        n.x = Math.max(0, Math.min(w, n.x));
-        n.y = Math.max(0, Math.min(h, n.y));
+      // ears of wheat (faint, large)
+      for (const m of ears) {
+        drift(m);
+        drawEar(m, 0.16, col);
       }
 
-      // links (the gluten / molecular network)
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i];
-          const c = nodes[j];
-          const dx = a.x - c.x;
-          const dy = a.y - c.y;
-          const dist = Math.hypot(dx, dy);
-          if (dist < LINK) {
-            const alpha = (1 - dist / LINK) * 0.22;
-            ctx!.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
-            ctx!.lineWidth = 1;
-            ctx!.beginPath();
-            ctx!.moveTo(a.x, a.y);
-            ctx!.lineTo(c.x, c.y);
-            ctx!.stroke();
-          }
-        }
-      }
-      // node dots (gently pulsing)
-      for (const n of nodes) {
-        const pr = n.r * (0.85 + 0.15 * Math.sin(t + n.ph));
+      // loose grains
+      for (const m of grains) {
+        drift(m);
+        ctx!.save();
+        ctx!.translate(m.x, m.y);
+        ctx!.rotate(m.rot);
+        ctx!.fillStyle = `rgba(${col},0.32)`;
+        grainShape(1.7 * m.s, 3.6 * m.s);
+        // crease
+        ctx!.strokeStyle = `rgba(${col},0.4)`;
+        ctx!.lineWidth = 0.6 * m.s;
         ctx!.beginPath();
-        ctx!.arc(n.x, n.y, pr, 0, Math.PI * 2);
-        ctx!.fillStyle = `rgba(${r},${g},${b},0.5)`;
-        ctx!.fill();
+        ctx!.moveTo(0, -3.4 * m.s);
+        ctx!.lineTo(0, 3.4 * m.s);
+        ctx!.stroke();
+        ctx!.restore();
       }
 
-      // fermentation bubbles
+      // fermentation bubbles (front)
       if (bubbles.length < (small ? 8 : 16) && Math.random() < 0.04)
         bubbles.push({
           x: Math.random() * w,
@@ -192,7 +256,7 @@ export default function AmbientCanvas() {
         }
         ctx!.beginPath();
         ctx!.arc(bu.x, bu.y, bu.r, 0, Math.PI * 2);
-        ctx!.strokeStyle = `rgba(${r},${g},${b},${bu.a * 0.6})`;
+        ctx!.strokeStyle = `rgba(${col},${bu.a * 0.55})`;
         ctx!.lineWidth = 1;
         ctx!.stroke();
         ctx!.beginPath();

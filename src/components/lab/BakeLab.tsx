@@ -94,6 +94,23 @@ const SEED_FRAC = [
   -0.02, 0.3, 0.62, -0.48,
 ];
 
+// condensation droplets clinging inside the oven during the steamy opening of
+// the bake. Fixed scatter near the chamber ceiling and upper walls; a few drip.
+const DROPS = [
+  { left: '14%', top: '12%', size: 7, o: 0.9, drip: false, delay: 0 },
+  { left: '22%', top: '20%', size: 5, o: 0.7, drip: true, delay: 0.4 },
+  { left: '31%', top: '10%', size: 8, o: 1, drip: false, delay: 0 },
+  { left: '40%', top: '16%', size: 5, o: 0.7, drip: false, delay: 0 },
+  { left: '49%', top: '9%', size: 9, o: 1, drip: true, delay: 1.1 },
+  { left: '58%', top: '15%', size: 6, o: 0.8, drip: false, delay: 0 },
+  { left: '67%', top: '11%', size: 7, o: 0.9, drip: false, delay: 0 },
+  { left: '76%', top: '19%', size: 5, o: 0.7, drip: true, delay: 0.7 },
+  { left: '84%', top: '13%', size: 8, o: 1, drip: false, delay: 0 },
+  { left: '12%', top: '30%', size: 4, o: 0.6, drip: false, delay: 0 },
+  { left: '88%', top: '32%', size: 4, o: 0.6, drip: false, delay: 0 },
+  { left: '35%', top: '26%', size: 5, o: 0.7, drip: true, delay: 1.6 },
+];
+
 export default function BakeLab() {
   const { lab } = useContent();
   const t = lab.bake;
@@ -301,7 +318,9 @@ export default function BakeLab() {
   const stripFill = phase === 'idle' ? 0.25 : 0.25 + progress * 0.75;
 
   const seedList = seedRows.map((r) => r.key);
-  const showSteam = phase === 'baking' && progress > 0.06 && progress < 0.92;
+  // humidity lives only in the opening ~15 min of the bake, then burns off
+  const humid = phase === 'idle' ? 0 : clamp((15 - clockMin) / 15, 0, 1) * (0.5 + steam * 0.5);
+  const showDrops = phase === 'baking' && humid > 0.05;
 
   const availableFlours = t.flours.filter((fl) => !blend.some((b) => b.key === fl.key));
   const availableSeeds = t.seeds.filter((sd) => !seedRows.some((s) => s.key === sd.key));
@@ -707,17 +726,20 @@ export default function BakeLab() {
             </g>
           </svg>
 
-          {/* steam */}
-          {showSteam && (
+          {/* humidity — condensation droplets in the steamy first minutes */}
+          {showDrops && (
             <div className="pointer-events-none absolute inset-0">
-              {Array.from({ length: 4 + Math.round(steam * 5) }).map((_, i) => (
+              {DROPS.map((d, i) => (
                 <span
                   key={i}
-                  className="absolute bottom-[28%] h-10 w-2 rounded-full bg-white/40 blur-[3px]"
+                  className={`mm-drop${d.drip ? ' mm-drop-drip' : ''}`}
                   style={{
-                    left: `${30 + i * 9}%`,
-                    animation: `mm-floatup ${2.6 + (i % 3) * 0.6}s ease-in ${i * 0.25}s infinite`,
-                    opacity: 0.3 + steam * 0.4,
+                    left: d.left,
+                    top: d.top,
+                    width: d.size,
+                    height: d.size * 1.15,
+                    opacity: humid * d.o,
+                    animationDelay: `${d.delay}s`,
                   }}
                 />
               ))}
@@ -776,9 +798,14 @@ export default function BakeLab() {
               <Stat label={t.result.crumb} value={t.crumbLevels[Math.round(model.crumb)]} />
             </div>
 
-            {/* crumb cross-section payoff */}
-            <div className="mt-4 overflow-hidden rounded-sm border border-line">
-              <CrumbSlice openness={model.crumb} color={model.crumbColor} crust={rampColor(model.crust)} />
+            {/* crumb cross-section payoff — a cut slice of the baked loaf */}
+            <div className="mt-4">
+              <p className="lab-readout mb-2 text-[0.58rem]">
+                {t.result.crumb} · {t.crumbLevels[Math.round(model.crumb)]}
+              </p>
+              <div className="overflow-hidden rounded-sm border border-line">
+                <CrumbSlice openness={model.crumb} color={model.crumbColor} crust={rampColor(model.crust)} />
+              </div>
             </div>
 
             {/* recipe summary */}
@@ -818,61 +845,74 @@ function CrumbSlice({
   color: string;
   crust: string;
 }) {
-  // an organic crumb cross-section: irregular alveoli, bigger & fewer when open
+  // a slice cut from the boule, seen face-on: a crust ring around an open
+  // crumb of soft air pockets. Holes are bigger and fewer when the crumb is
+  // open, tighter when dense; each reads as a shaded cavity with a lit rim.
+  const cxv = 100;
+  const cyv = 64;
+  const RXi = 82;
+  const RYi = 46;
   const holes = useMemo(() => {
-    const n = 26 + Math.round(openness * 10);
-    const maxR = 2 + openness * 3.2;
+    const n = 22 + Math.round(openness * 16);
+    const maxR = 2.5 + openness * 4.8;
     const arr: { x: number; y: number; rx: number; ry: number; rot: number }[] = [];
-    let s = 7;
+    let s = 11;
     const rnd = () => {
       s = (s * 9301 + 49297) % 233280;
       return s / 233280;
     };
-    for (let i = 0; i < n; i++) {
-      const r = (1 + rnd() * maxR) * (0.6 + openness * 0.6);
-      arr.push({
-        x: 22 + rnd() * 156,
-        y: 26 + rnd() * 44,
-        rx: r,
-        ry: r * (0.7 + rnd() * 0.6),
-        rot: rnd() * 180,
-      });
+    let placed = 0;
+    let guard = 0;
+    while (placed < n && guard < n * 8) {
+      guard++;
+      const ang = rnd() * Math.PI * 2;
+      const rad = Math.pow(rnd(), 0.65); // 0 centre → 1 edge
+      const px = cxv + Math.cos(ang) * rad * RXi * 0.9;
+      const py = cyv + Math.sin(ang) * rad * RYi * 0.9;
+      const r = (1 + rnd() * maxR) * (1 - rad * 0.5); // smaller near the crust
+      if (r < 0.9) continue;
+      arr.push({ x: px, y: py, rx: r, ry: r * (0.72 + rnd() * 0.5), rot: rnd() * 180 });
+      placed++;
     }
     return arr;
   }, [openness]);
-  const crumbLight = hexLerp(color, '#fff6e6', 0.25);
+  const crumbLight = hexLerp(color, '#fff7e8', 0.32);
+  const crumbEdge = hexLerp(color, '#a07b46', 0.35);
   return (
-    <svg viewBox="0 0 200 96" className="w-full">
+    <svg viewBox="0 0 200 134" className="w-full">
       <defs>
-        <radialGradient id="crumbFill" cx="50%" cy="46%" r="62%">
+        <radialGradient id="crumbFill" cx="50%" cy="42%" r="64%">
           <stop offset="0%" stopColor={crumbLight} />
           <stop offset="100%" stopColor={color} />
         </radialGradient>
+        <radialGradient id="holeGrad" cx="50%" cy="46%" r="52%">
+          <stop offset="0%" stopColor="#3a2613" stopOpacity="0.62" />
+          <stop offset="68%" stopColor="#3a2613" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#3a2613" stopOpacity="0" />
+        </radialGradient>
       </defs>
+      {/* board + contact shadow */}
+      <rect width="200" height="134" fill="#efe6d4" />
+      <ellipse cx={cxv} cy={cyv + 56} rx="84" ry="9" fill="#000" opacity="0.08" />
       {/* crust ring */}
-      <path
-        d="M 100 6 C 152 6 192 28 192 52 C 192 78 150 90 100 90 C 50 90 8 78 8 52 C 8 28 48 6 100 6 Z"
-        fill={crust}
-      />
+      <ellipse cx={cxv} cy={cyv} rx="94" ry="58" fill={crust} />
+      <ellipse cx={cxv} cy={cyv} rx="89" ry="53" fill={crumbEdge} opacity="0.55" />
       {/* crumb interior */}
-      <path
-        d="M 100 15 C 144 15 182 32 182 53 C 182 74 146 83 100 83 C 54 83 18 74 18 53 C 18 32 56 15 100 15 Z"
-        fill="url(#crumbFill)"
-      />
-      <g>
-        {holes.map((h, i) => (
+      <ellipse cx={cxv} cy={cyv} rx={RXi} ry={RYi} fill="url(#crumbFill)" />
+      {/* air pockets */}
+      {holes.map((h, i) => (
+        <g key={i} transform={`rotate(${h.rot.toFixed(1)} ${h.x} ${h.y})`}>
+          <ellipse cx={h.x} cy={h.y} rx={h.rx} ry={h.ry} fill="url(#holeGrad)" />
           <ellipse
-            key={i}
             cx={h.x}
-            cy={h.y}
-            rx={h.rx}
-            ry={h.ry}
-            transform={`rotate(${h.rot} ${h.x} ${h.y})`}
-            fill="#3a2a1a"
-            opacity="0.22"
+            cy={h.y + h.ry * 0.55}
+            rx={h.rx * 0.66}
+            ry={h.ry * 0.28}
+            fill={crumbLight}
+            opacity="0.55"
           />
-        ))}
-      </g>
+        </g>
+      ))}
     </svg>
   );
 }
