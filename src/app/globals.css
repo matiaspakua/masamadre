@@ -220,6 +220,32 @@
   }
 }
 
+/* Recipe-book flipbook: leaves rotate around the spine in 3D. */
+.mm-book {
+  perspective: 2400px;
+}
+.mm-leaf {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 0.95s cubic-bezier(0.66, 0.01, 0.2, 1);
+  will-change: transform;
+}
+.mm-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+.mm-face-back {
+  transform: rotateY(180deg);
+}
+
 /* Hand-drawn timeline sketch: rough stroke that "draws on". */
 .sketch-stroke {
   fill: none;

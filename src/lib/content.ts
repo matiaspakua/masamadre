@@ -58,6 +58,20 @@ export type BreadType = {
   body: string;
   img: string;
 };
+export type Reference = {
+  authors?: string;
+  title: string;
+  source: string;
+  year?: string;
+  url?: string;
+  note?: string;
+};
+export type ReferenceShelf = {
+  key: string;
+  label: string;
+  blurb: string;
+  items: Reference[];
+};
 
 export interface SiteContent {
   nav: { sections: { id: string; label: string }[]; langLabel: string };
@@ -121,15 +135,24 @@ export interface SiteContent {
     bake: {
       heading: string;
       sub: string;
-      flourTypeLabel: string;
+      blendLabel: string;
+      blendHint: string;
+      addFlour: string;
+      totalFlourLabel: string;
       seedsLabel: string;
+      seedsHint: string;
+      addSeed: string;
+      emptyBlend: string;
       tempLabel: string;
       steamLabel: string;
       bakeBtn: string;
       bakingBtn: string;
       resetBtn: string;
       clock: string;
+      phaseLabel: string;
       stages: {
+        shape: string;
+        proof: string;
         load: string;
         spring: string;
         crust: string;
@@ -191,6 +214,20 @@ export interface SiteContent {
     titleB: string;
     items: Benefit[];
   };
+  references: {
+    index: string;
+    eyebrow: string;
+    titleA: string;
+    titleB: string;
+    intro: string;
+    cover: { kicker: string; title: string; subtitle: string };
+    prev: string;
+    next: string;
+    pageLabel: string;
+    openLabel: string;
+    disclaimer: string;
+    shelves: ReferenceShelf[];
+  };
   closing: {
     index: string;
     title: string;
@@ -214,6 +251,7 @@ const es: SiteContent = {
       { id: 'composition', label: 'Composición' },
       { id: 'baking', label: 'El Horno' },
       { id: 'benefits', label: 'Beneficios' },
+      { id: 'references', label: 'Referencias' },
       { id: 'closing', label: 'Cierre' },
     ],
   },
@@ -309,16 +347,25 @@ const es: SiteContent = {
     },
     bake: {
       heading: 'El horno · simulador',
-      sub: 'Arma tu fórmula y hornéala',
-      flourTypeLabel: 'Tipo de harina',
+      sub: 'Diseña tu fórmula y hornéala',
+      blendLabel: 'Mezcla de harinas',
+      blendHint: 'Combina harinas en gramos. Ej.: 700 g blanca + 200 g integral + 100 g espelta.',
+      addFlour: 'Añadir harina',
+      totalFlourLabel: 'Harina total',
       seedsLabel: 'Semillas',
+      seedsHint: 'Suma las semillas que quieras, en gramos.',
+      addSeed: 'Añadir semilla',
+      emptyBlend: 'Añade al menos una harina para empezar.',
       tempLabel: 'Temperatura',
       steamLabel: 'Vapor',
       bakeBtn: 'Hornear',
       bakingBtn: 'Horneando…',
       resetBtn: 'Otra hornada',
       clock: 'min',
+      phaseLabel: 'Fase',
       stages: {
+        shape: 'Formado',
+        proof: 'Fermentación',
         load: 'Al horno',
         spring: 'Subida en horno',
         crust: 'Formando corteza',
@@ -336,11 +383,14 @@ const es: SiteContent = {
       crustLevels: ['Pálida', 'Dorada', 'Profunda', 'Intensa'],
       crumbLevels: ['Cerrada', 'Pareja', 'Abierta', 'Salvaje'],
       flours: [
-        { key: 'white', name: 'Harina blanca', note: 'Fuerte, gran subida, miga clara.' },
-        { key: 'wholewheat', name: 'Trigo integral', note: 'Más fibra, sube menos, tuesta antes.' },
+        { key: 'white', name: 'Blanca', note: 'Floja y clara; miga tierna.' },
+        { key: 'strong', name: 'De fuerza', note: 'Mucho gluten, gran subida.' },
+        { key: 'wholewheat', name: 'Integral', note: 'Más fibra, sube menos, tuesta antes.' },
         { key: 'spelt', name: 'Espelta', note: 'Nuez y dulzor, gluten delicado.' },
         { key: 'rye', name: 'Centeno', note: 'Densa y oscura, muy húmeda.' },
         { key: 'oat', name: 'Avena', note: 'Suave y pálida, mejor mezclada.' },
+        { key: 'semolina', name: 'Sémola', note: 'Trigo duro, miga amarilla y firme.' },
+        { key: 'einkorn', name: 'Escanda', note: 'Grano antiguo, dorado y dulce.' },
       ],
       seeds: [
         { key: 'sesame', name: 'Sésamo' },
@@ -348,6 +398,9 @@ const es: SiteContent = {
         { key: 'sunflower', name: 'Girasol' },
         { key: 'flax', name: 'Lino' },
         { key: 'pumpkin', name: 'Calabaza' },
+        { key: 'chia', name: 'Chía' },
+        { key: 'millet', name: 'Mijo' },
+        { key: 'caraway', name: 'Alcaravea' },
       ],
     },
   },
@@ -429,8 +482,145 @@ const es: SiteContent = {
       { title: 'Matiz honesto', body: 'La masa madre es pan, no medicina. Las ventajas son reales pero modestas, y dependen de la harina, el tiempo y la hidratación. Hablar de panacea es exagerar la evidencia.' },
     ],
   },
-  closing: {
+  references: {
     index: 'IX',
+    eyebrow: 'El libro de referencias',
+    titleA: 'Las fuentes',
+    titleB: 'que lo sostienen',
+    intro:
+      'Cada afirmación de este archivo se apoya en literatura revisada por pares, libros de referencia e instituciones que estudian la masa madre. Pasa las páginas de este libro para leer la bibliografía.',
+    cover: {
+      kicker: 'Bibliografía · masa madre',
+      title: 'El libro de\nreferencias',
+      subtitle: 'Ciencia, historia y oficio del pan fermentado',
+    },
+    prev: 'Anterior',
+    next: 'Siguiente',
+    pageLabel: 'Página',
+    openLabel: 'Abrir fuente ↗',
+    disclaimer:
+      'Bibliografía con fines divulgativos. Verifica siempre las recetas y datos nutricionales con la fuente original.',
+    shelves: [
+      {
+        key: 'books',
+        label: 'Libros',
+        blurb: 'El canon: divulgación y manuales de oficio que sustentan la historia y la técnica.',
+        items: [
+          {
+            authors: 'Michael Pollan',
+            title: 'Cooked: A Natural History of Transformation',
+            source: 'The Penguin Press',
+            year: '2013',
+            url: 'https://michaelpollan.com/books/cooked/',
+            note: 'La parte «Aire» sigue el aprendizaje del pan con masa madre junto a Chad Robertson.',
+          },
+          {
+            authors: 'Michael Pollan',
+            title: 'The Omnivore’s Dilemma',
+            source: 'The Penguin Press',
+            year: '2006',
+            url: 'https://michaelpollan.com/books/the-omnivores-dilemma/',
+            note: 'El recorrido del trigo y el grano dentro de la cadena alimentaria moderna.',
+          },
+          {
+            authors: 'Chad Robertson',
+            title: 'Tartine Bread',
+            source: 'Chronicle Books',
+            year: '2010',
+            url: 'https://www.chroniclebooks.com/products/tartine-bread',
+            note: 'El manual de referencia de la hogaza de campo de masa madre.',
+          },
+          {
+            authors: 'Harold McGee',
+            title: 'On Food and Cooking: The Science and Lore of the Kitchen',
+            source: 'Scribner',
+            year: '2004',
+            note: 'Obra de cabecera sobre la química del gluten, el almidón y la fermentación.',
+          },
+        ],
+      },
+      {
+        key: 'papers',
+        label: 'Artículos científicos',
+        blurb: 'Investigación revisada por pares sobre la microbiología y bioquímica del fermento.',
+        items: [
+          {
+            authors: 'Landis, E. A., Oliverio, A. M., et al.',
+            title: 'The diversity and function of sourdough starter microbiomes',
+            source: 'eLife 10:e61644',
+            year: '2021',
+            url: 'https://elifesciences.org/articles/61644',
+            note: '500 fermentos de cuatro continentes secuenciados con ciencia ciudadana.',
+          },
+          {
+            authors: 'Gänzle, M. G.',
+            title: 'Enzymatic and bacterial conversions during sourdough fermentation',
+            source: 'Food Microbiology 37, 2–10',
+            year: '2014',
+            url: 'https://doi.org/10.1016/j.fm.2013.04.007',
+            note: 'Cómo las enzimas del cereal y las bacterias lácticas remodelan la masa.',
+          },
+          {
+            authors: 'Gobbetti, M. & Gänzle, M. (eds.)',
+            title: 'Handbook on Sourdough Biotechnology',
+            source: 'Springer Nature (2.ª ed.)',
+            year: '2023',
+            url: 'https://link.springer.com/book/10.1007/978-1-4614-5425-0',
+            note: 'La obra de referencia dedicada por completo a la biotecnología de la masa madre.',
+          },
+        ],
+      },
+      {
+        key: 'institutions',
+        label: 'Instituciones y proyectos',
+        blurb: 'Centros y proyectos que preservan y estudian la biodiversidad del fermento.',
+        items: [
+          {
+            authors: 'Puratos · Karl De Smedt',
+            title: 'The Sourdough Library & Quest for Sourdough',
+            source: 'Sankt Vith, Bélgica',
+            url: 'https://www.questforsourdough.com/',
+            note: 'La única biblioteca de masas madre del mundo: cepas vivas de todo el planeta.',
+          },
+          {
+            authors: 'Rob Dunn Lab · NC State University',
+            title: 'Wild Sourdough & Global Sourdough Project',
+            source: 'Dept. of Applied Ecology, EE. UU.',
+            url: 'https://robdunnlab.com/projects/sourdough/',
+            note: 'Ciencia ciudadana sobre la ecología microbiana de los fermentos caseros.',
+          },
+          {
+            authors: 'Vanessa Kimbell',
+            title: 'The Sourdough School',
+            source: 'Northamptonshire, Reino Unido',
+            url: 'https://www.sourdough.co.uk/',
+            note: 'Investigación y formación sobre fermentación, digestibilidad y nutrición.',
+          },
+        ],
+      },
+      {
+        key: 'open',
+        label: 'Fuentes abiertas',
+        blurb: 'Referencias de acceso libre usadas para fechas, nombres y el hilo histórico.',
+        items: [
+          {
+            title: 'Sourdough',
+            source: 'Wikipedia (inglés)',
+            url: 'https://en.wikipedia.org/wiki/Sourdough',
+            note: 'Cronología histórica, cepas y panorama general.',
+          },
+          {
+            title: 'Bread',
+            source: 'Wikipedia (inglés)',
+            url: 'https://en.wikipedia.org/wiki/Bread',
+            note: 'Contexto sobre cereales, gluten y procesos de panificación.',
+          },
+        ],
+      },
+    ],
+  },
+  closing: {
+    index: 'X',
     title: 'Tiempo que se saborea',
     body: 'Un tarro de harina y agua, mantenido tibio y alimentado, guarda un hilo ininterrumpido de fermentación que llega hasta los primeros agricultores. Hornear con masa madre es cuidar un archivo vivo —parte cultura, parte química, parte oficio— y entregarlo, todavía vivo, a quien hornee después.',
     signature: 'harina · agua · sal · tiempo',
@@ -459,6 +649,7 @@ const en: SiteContent = {
       { id: 'composition', label: 'Composition' },
       { id: 'baking', label: 'The Oven' },
       { id: 'benefits', label: 'Nuance' },
+      { id: 'references', label: 'References' },
       { id: 'closing', label: 'Closing' },
     ],
   },
@@ -554,16 +745,25 @@ const en: SiteContent = {
     },
     bake: {
       heading: 'The oven · simulator',
-      sub: 'Build your formula and bake it',
-      flourTypeLabel: 'Flour',
+      sub: 'Design your formula and bake it',
+      blendLabel: 'Flour blend',
+      blendHint: 'Combine flours by the gram. E.g. 700 g white + 200 g whole wheat + 100 g spelt.',
+      addFlour: 'Add flour',
+      totalFlourLabel: 'Total flour',
       seedsLabel: 'Seeds',
+      seedsHint: 'Add any seeds you like, by the gram.',
+      addSeed: 'Add seed',
+      emptyBlend: 'Add at least one flour to begin.',
       tempLabel: 'Temperature',
       steamLabel: 'Steam',
       bakeBtn: 'Bake',
       bakingBtn: 'Baking…',
       resetBtn: 'Bake again',
       clock: 'min',
+      phaseLabel: 'Phase',
       stages: {
+        shape: 'Shaping',
+        proof: 'Proofing',
         load: 'Into the oven',
         spring: 'Oven spring',
         crust: 'Crust forming',
@@ -581,11 +781,14 @@ const en: SiteContent = {
       crustLevels: ['Pale', 'Golden', 'Deep', 'Dark'],
       crumbLevels: ['Tight', 'Even', 'Open', 'Wild'],
       flours: [
-        { key: 'white', name: 'White flour', note: 'Strong, big rise, pale crumb.' },
+        { key: 'white', name: 'White', note: 'Soft and pale; tender crumb.' },
+        { key: 'strong', name: 'Strong / bread', note: 'High gluten, big rise.' },
         { key: 'wholewheat', name: 'Whole wheat', note: 'More fibre, less rise, browns sooner.' },
         { key: 'spelt', name: 'Spelt', note: 'Nutty and sweet, delicate gluten.' },
         { key: 'rye', name: 'Rye', note: 'Dense and dark, very moist.' },
         { key: 'oat', name: 'Oat', note: 'Soft and pale, best blended.' },
+        { key: 'semolina', name: 'Semolina', note: 'Durum wheat, golden firm crumb.' },
+        { key: 'einkorn', name: 'Einkorn', note: 'Ancient grain, golden and sweet.' },
       ],
       seeds: [
         { key: 'sesame', name: 'Sesame' },
@@ -593,6 +796,9 @@ const en: SiteContent = {
         { key: 'sunflower', name: 'Sunflower' },
         { key: 'flax', name: 'Flax' },
         { key: 'pumpkin', name: 'Pumpkin' },
+        { key: 'chia', name: 'Chia' },
+        { key: 'millet', name: 'Millet' },
+        { key: 'caraway', name: 'Caraway' },
       ],
     },
   },
@@ -674,8 +880,145 @@ const en: SiteContent = {
       { title: 'Honest nuance', body: 'Sourdough is bread, not medicine. The gains are real but modest, and depend on flour, time, and hydration. Claims of a cure-all overreach the evidence.' },
     ],
   },
-  closing: {
+  references: {
     index: 'IX',
+    eyebrow: 'The book of references',
+    titleA: 'The sources',
+    titleB: 'that hold it up',
+    intro:
+      'Every claim in this archive rests on peer-reviewed literature, reference books, and institutions that study sourdough. Turn the pages of this book to read the bibliography.',
+    cover: {
+      kicker: 'Bibliography · sourdough',
+      title: 'The book of\nreferences',
+      subtitle: 'Science, history & craft of leavened bread',
+    },
+    prev: 'Previous',
+    next: 'Next',
+    pageLabel: 'Page',
+    openLabel: 'Open source ↗',
+    disclaimer:
+      'Bibliography for educational purposes. Always verify recipes and nutritional figures against the original source.',
+    shelves: [
+      {
+        key: 'books',
+        label: 'Books',
+        blurb: 'The canon: popular science and craft manuals behind the history and technique.',
+        items: [
+          {
+            authors: 'Michael Pollan',
+            title: 'Cooked: A Natural History of Transformation',
+            source: 'The Penguin Press',
+            year: '2013',
+            url: 'https://michaelpollan.com/books/cooked/',
+            note: 'The “Air” section follows an apprenticeship in sourdough with Chad Robertson.',
+          },
+          {
+            authors: 'Michael Pollan',
+            title: 'The Omnivore’s Dilemma',
+            source: 'The Penguin Press',
+            year: '2006',
+            url: 'https://michaelpollan.com/books/the-omnivores-dilemma/',
+            note: 'The journey of wheat and grain through the modern food chain.',
+          },
+          {
+            authors: 'Chad Robertson',
+            title: 'Tartine Bread',
+            source: 'Chronicle Books',
+            year: '2010',
+            url: 'https://www.chroniclebooks.com/products/tartine-bread',
+            note: 'The reference manual for the sourdough country loaf.',
+          },
+          {
+            authors: 'Harold McGee',
+            title: 'On Food and Cooking: The Science and Lore of the Kitchen',
+            source: 'Scribner',
+            year: '2004',
+            note: 'The standard work on the chemistry of gluten, starch, and fermentation.',
+          },
+        ],
+      },
+      {
+        key: 'papers',
+        label: 'Scientific papers',
+        blurb: 'Peer-reviewed research on the microbiology and biochemistry of the ferment.',
+        items: [
+          {
+            authors: 'Landis, E. A., Oliverio, A. M., et al.',
+            title: 'The diversity and function of sourdough starter microbiomes',
+            source: 'eLife 10:e61644',
+            year: '2021',
+            url: 'https://elifesciences.org/articles/61644',
+            note: '500 starters across four continents, sequenced via citizen science.',
+          },
+          {
+            authors: 'Gänzle, M. G.',
+            title: 'Enzymatic and bacterial conversions during sourdough fermentation',
+            source: 'Food Microbiology 37, 2–10',
+            year: '2014',
+            url: 'https://doi.org/10.1016/j.fm.2013.04.007',
+            note: 'How cereal enzymes and lactic acid bacteria remodel the dough.',
+          },
+          {
+            authors: 'Gobbetti, M. & Gänzle, M. (eds.)',
+            title: 'Handbook on Sourdough Biotechnology',
+            source: 'Springer Nature (2nd ed.)',
+            year: '2023',
+            url: 'https://link.springer.com/book/10.1007/978-1-4614-5425-0',
+            note: 'The reference volume devoted entirely to sourdough biotechnology.',
+          },
+        ],
+      },
+      {
+        key: 'institutions',
+        label: 'Institutions & projects',
+        blurb: 'Centres and projects preserving and studying the ferment’s biodiversity.',
+        items: [
+          {
+            authors: 'Puratos · Karl De Smedt',
+            title: 'The Sourdough Library & Quest for Sourdough',
+            source: 'Sankt Vith, Belgium',
+            url: 'https://www.questforsourdough.com/',
+            note: 'The world’s only sourdough library — living strains from across the globe.',
+          },
+          {
+            authors: 'Rob Dunn Lab · NC State University',
+            title: 'Wild Sourdough & Global Sourdough Project',
+            source: 'Dept. of Applied Ecology, USA',
+            url: 'https://robdunnlab.com/projects/sourdough/',
+            note: 'Citizen science on the microbial ecology of home starters.',
+          },
+          {
+            authors: 'Vanessa Kimbell',
+            title: 'The Sourdough School',
+            source: 'Northamptonshire, UK',
+            url: 'https://www.sourdough.co.uk/',
+            note: 'Research and teaching on fermentation, digestibility, and nutrition.',
+          },
+        ],
+      },
+      {
+        key: 'open',
+        label: 'Open references',
+        blurb: 'Open-access references used for dates, names, and the historical thread.',
+        items: [
+          {
+            title: 'Sourdough',
+            source: 'Wikipedia (English)',
+            url: 'https://en.wikipedia.org/wiki/Sourdough',
+            note: 'Historical timeline, strains, and general overview.',
+          },
+          {
+            title: 'Bread',
+            source: 'Wikipedia (English)',
+            url: 'https://en.wikipedia.org/wiki/Bread',
+            note: 'Context on cereals, gluten, and bread-making processes.',
+          },
+        ],
+      },
+    ],
+  },
+  closing: {
+    index: 'X',
     title: 'Time you can taste',
     body: 'A jar of flour and water, kept warm and fed, holds an unbroken thread of fermentation reaching back to the first farmers. To bake with masa madre is to tend a living archive — part culture, part chemistry, part craft — and to hand it, still alive, to whoever bakes next.',
     signature: 'flour · water · salt · time',

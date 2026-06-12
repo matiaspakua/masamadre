@@ -9,6 +9,7 @@ import Process from '@/components/sections/Process';
 import Composition from '@/components/sections/Composition';
 import Baking from '@/components/sections/Baking';
 import Benefits from '@/components/sections/Benefits';
+import References from '@/components/sections/References';
 import Closing from '@/components/sections/Closing';
 
 export default function Home() {
@@ -28,6 +29,8 @@ export default function Home() {
         <Composition />
         <Baking />
         <Benefits />
+        <Divider />
+        <References />
         <Closing />
       </main>
     </>
