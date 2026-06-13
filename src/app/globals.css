@@ -285,6 +285,18 @@
   stroke-dasharray: 1;
 }
 
+/* ── Bakery facade: chimney smoke ── */
+@keyframes fc-smoke-a { 0%{transform:translateY(0) scale(.5);opacity:0} 18%{opacity:.38} 75%{opacity:.18} 100%{transform:translateY(-72px) scale(1.7);opacity:0} }
+@keyframes fc-smoke-b { 0%{transform:translateY(0) scale(.4);opacity:0} 20%{opacity:.28} 80%{opacity:.12} 100%{transform:translateY(-90px) scale(2);opacity:0} }
+@keyframes fc-smoke-c { 0%{transform:translateY(0) scale(.6);opacity:0} 15%{opacity:.22} 70%{opacity:.08} 100%{transform:translateY(-55px) scale(1.4);opacity:0} }
+.fc-smoke-a { animation: fc-smoke-a 5.5s ease-out 0s infinite; transform-box: fill-box; transform-origin: center bottom; }
+.fc-smoke-b { animation: fc-smoke-b 6.2s ease-out 1.9s infinite; transform-box: fill-box; transform-origin: center bottom; }
+.fc-smoke-c { animation: fc-smoke-c 4.8s ease-out 3.6s infinite; transform-box: fill-box; transform-origin: center bottom; }
+
+/* ── Cellar oven: fire flicker on the room backdrop ── */
+@keyframes rb-fire { 0%,100%{opacity:.22} 50%{opacity:.34} }
+.rb-fire { animation: rb-fire 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
