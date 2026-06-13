@@ -285,6 +285,47 @@
   stroke-dasharray: 1;
 }
 
+/* ── Bakery exterior: chimney smoke ── */
+@keyframes ext-smoke-a {
+  0%   { transform: translateY(0) scale(0.5); opacity: 0; }
+  18%  { opacity: 0.38; }
+  75%  { opacity: 0.18; }
+  100% { transform: translateY(-72px) scale(1.7); opacity: 0; }
+}
+@keyframes ext-smoke-b {
+  0%   { transform: translateY(0) scale(0.4); opacity: 0; }
+  20%  { opacity: 0.28; }
+  80%  { opacity: 0.12; }
+  100% { transform: translateY(-90px) scale(2.0); opacity: 0; }
+}
+@keyframes ext-smoke-c {
+  0%   { transform: translateY(0) scale(0.6); opacity: 0; }
+  15%  { opacity: 0.22; }
+  70%  { opacity: 0.08; }
+  100% { transform: translateY(-55px) scale(1.4); opacity: 0; }
+}
+.ext-smoke-a {
+  animation: ext-smoke-a 5.5s ease-out 0s infinite;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.ext-smoke-b {
+  animation: ext-smoke-b 6.2s ease-out 1.9s infinite;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+.ext-smoke-c {
+  animation: ext-smoke-c 4.8s ease-out 3.6s infinite;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+/* ── Room entry: depth-push animation ── */
+@keyframes room-push-in {
+  from { transform: perspective(1200px) translateZ(-40px) scale(0.975); opacity: 0; }
+  to   { transform: perspective(1200px) translateZ(0)     scale(1);     opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
