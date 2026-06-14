@@ -47,7 +47,7 @@ export default function Nav() {
       {/* Top progress hairline */}
       <div className="fixed left-0 right-0 top-0 z-40 h-px bg-line">
         <div
-          className="h-full bg-levain transition-[width] duration-150 ease-out"
+          className="h-full bg-[color:var(--accent)] transition-[width] duration-150 ease-out"
           style={{ width: `${progress * 100}%` }}
         />
       </div>
@@ -93,7 +93,7 @@ export default function Nav() {
             <span
               className={`font-mono text-[0.62rem] uppercase tracking-[0.18em] transition-all duration-300 ${
                 active === s.id
-                  ? 'text-levain opacity-100'
+                  ? 'text-[color:var(--accent)] opacity-100'
                   : 'text-ash opacity-0 group-hover:opacity-100'
               }`}
             >
@@ -102,7 +102,7 @@ export default function Nav() {
             <span
               className={`h-px transition-all duration-300 ${
                 active === s.id
-                  ? 'w-8 bg-levain'
+                  ? 'w-8 bg-[color:var(--accent)]'
                   : 'w-4 bg-ash/50 group-hover:w-6 group-hover:bg-ink'
               }`}
             />

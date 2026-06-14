@@ -19,21 +19,30 @@ export default function StarterJar({
 }) {
   const count = Math.round(8 + activity * 28);
 
-  const bubbles = useMemo(
-    () =>
-      Array.from({ length: count }).map((_, i) => {
-        const size = 3 + Math.random() * (6 + activity * 10);
-        const dur = 2.4 + Math.random() * 3 - activity * 1.2;
-        return {
-          id: i,
-          left: 8 + Math.random() * 84,
-          size,
-          duration: Math.max(1.2, dur),
-          delay: Math.random() * 4,
-        };
-      }),
-    [count, activity],
-  );
+  // Deterministic, seeded bubbles. Math.random() would diverge between the
+  // server render and the client hydration and trip React's hydration check;
+  // a seeded PRNG derived from `activity` produces identical values on both.
+  const bubbles = useMemo(() => {
+    let seed = Math.floor(activity * 997) + count + 1;
+    const rng = () => {
+      seed |= 0;
+      seed = (seed + 0x6d2b79f5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    return Array.from({ length: count }).map((_, i) => {
+      const size = 3 + rng() * (6 + activity * 10);
+      const dur = 2.4 + rng() * 3 - activity * 1.2;
+      return {
+        id: i,
+        left: 8 + rng() * 84,
+        size,
+        duration: Math.max(1.2, dur),
+        delay: rng() * 4,
+      };
+    });
+  }, [count, activity]);
 
   return (
     <div

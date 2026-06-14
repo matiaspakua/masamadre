@@ -7,6 +7,12 @@
   --ink: #2a2018;
   --levain: #c0741a;
   --phosphor: #0e7a6b;
+
+  /* Living accent — driven by the ferment bridge as you scroll (amber →
+     ferment teal → oven ember). Falls back to amber with no JS. */
+  --accent: rgb(192 116 26);
+  --accent-soft: rgba(192, 116, 26, 0.14);
+  --accent-line: rgba(192, 116, 26, 0.5);
 }
 
 @layer base {
@@ -35,7 +41,7 @@
   }
 
   ::selection {
-    background: var(--levain);
+    background: var(--accent);
     color: #fff;
   }
 
@@ -148,6 +154,12 @@
     transform: translateY(28px);
     will-change: transform, opacity;
   }
+  /* Clip-path wipe target; hidden until the heading is uncovered on scroll. */
+  .reveal-mask {
+    opacity: 0;
+    clip-path: inset(0 0 102% 0);
+    will-change: clip-path, transform, opacity;
+  }
 }
 
 /* A rising CO2 bubble in the starter jar. */
@@ -162,6 +174,32 @@
     transparent 72%
   );
   box-shadow: 0 0 6px rgba(192, 116, 26, 0.3);
+  animation-name: rise;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+}
+
+/* The ferment instrument's rising level — accent-tinted, lit from within. */
+.ferment-fill {
+  background: linear-gradient(
+    to top,
+    var(--accent-soft),
+    var(--accent-soft) 40%,
+    color-mix(in srgb, var(--accent) 32%, transparent)
+  );
+}
+
+/* CO2 bubble that reads the living accent (used in the instrument column). */
+.bubble-accent {
+  position: absolute;
+  bottom: 0;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 32% 30%,
+    rgba(255, 255, 255, 0.8),
+    var(--accent-soft) 55%,
+    transparent 72%
+  );
   animation-name: rise;
   animation-timing-function: ease-in;
   animation-iteration-count: infinite;
@@ -285,6 +323,18 @@
   stroke-dasharray: 1;
 }
 
+/* ── Bakery facade: chimney smoke ── */
+@keyframes fc-smoke-a { 0%{transform:translateY(0) scale(.5);opacity:0} 18%{opacity:.38} 75%{opacity:.18} 100%{transform:translateY(-72px) scale(1.7);opacity:0} }
+@keyframes fc-smoke-b { 0%{transform:translateY(0) scale(.4);opacity:0} 20%{opacity:.28} 80%{opacity:.12} 100%{transform:translateY(-90px) scale(2);opacity:0} }
+@keyframes fc-smoke-c { 0%{transform:translateY(0) scale(.6);opacity:0} 15%{opacity:.22} 70%{opacity:.08} 100%{transform:translateY(-55px) scale(1.4);opacity:0} }
+.fc-smoke-a { animation: fc-smoke-a 5.5s ease-out 0s infinite; transform-box: fill-box; transform-origin: center bottom; }
+.fc-smoke-b { animation: fc-smoke-b 6.2s ease-out 1.9s infinite; transform-box: fill-box; transform-origin: center bottom; }
+.fc-smoke-c { animation: fc-smoke-c 4.8s ease-out 3.6s infinite; transform-box: fill-box; transform-origin: center bottom; }
+
+/* ── Cellar oven: fire flicker on the room backdrop ── */
+@keyframes rb-fire { 0%,100%{opacity:.22} 50%{opacity:.34} }
+.rb-fire { animation: rb-fire 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -293,11 +343,14 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .reveal {
+  .reveal,
+  .reveal-mask {
     opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
   }
-  .bubble {
+  .bubble,
+  .bubble-accent {
     display: none;
   }
 }

@@ -34,7 +34,8 @@ export default function Hero() {
           '.hero-visual',
           { opacity: 0, scale: 0.92, duration: 1.4 },
           0.35,
-        );
+        )
+        .from('.hero-spec', { opacity: 0, duration: 0.8 }, '-=0.5');
 
       gsap.to('.hero-loaf', {
         yPercent: -12,
@@ -90,7 +91,7 @@ export default function Hero() {
               <span className="hero-word inline-block">{hero.titleA}</span>
             </span>
             <span className="block overflow-hidden">
-              <span className="hero-word inline-block italic text-levain">
+              <span className="hero-word inline-block italic text-[color:var(--accent)]">
                 {hero.titleB}
               </span>
             </span>
@@ -101,12 +102,14 @@ export default function Hero() {
           <div className="hero-cue mt-12 flex items-center gap-4">
             <span className="lab-readout text-xs">{hero.scrollCue}</span>
             <span className="relative h-10 w-px overflow-hidden bg-line">
-              <span className="absolute left-0 top-0 h-4 w-full animate-[rise_1.8s_ease-in-out_infinite] bg-levain" />
+              <span className="absolute left-0 top-0 h-4 w-full animate-[rise_1.8s_ease-in-out_infinite] bg-[color:var(--accent)]" />
             </span>
           </div>
         </div>
 
-        {/* Loaf image with the living jar layered over it */}
+        {/* Loaf image with the living jar layered over it — framed like a
+            specimen under glass, with a data caption that rhymes with the
+            fermentation instrument. */}
         <div className="hero-visual relative mx-auto w-full max-w-md lg:mr-0">
           <div className="img-frame relative aspect-[4/5]">
             <img
@@ -115,10 +118,25 @@ export default function Hero() {
               className="hero-loaf h-[112%] w-full -translate-y-[6%] object-cover"
               loading="eager"
             />
+            {/* corner registration ticks */}
+            {[
+              'left-2 top-2 border-l border-t',
+              'right-2 top-2 border-r border-t',
+              'left-2 bottom-2 border-l border-b',
+              'right-2 bottom-2 border-r border-b',
+            ].map((pos) => (
+              <span
+                key={pos}
+                className={`pointer-events-none absolute h-4 w-4 border-paper/70 ${pos}`}
+              />
+            ))}
           </div>
           <div className="hero-jar-wrap absolute -bottom-8 -left-6 w-32 sm:-left-10 sm:w-40">
             <StarterJar activity={0.7} rise={0.6} showLabel={false} />
           </div>
+          <p className="hero-spec absolute -bottom-7 right-0 font-mono text-[0.56rem] uppercase tracking-[0.2em] text-ash">
+            Specimen&nbsp;N°01 · <span className="text-[color:var(--accent)]">pH 6.0</span> · 0&nbsp;h
+          </p>
         </div>
       </div>
     </section>

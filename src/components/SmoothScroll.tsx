@@ -32,7 +32,25 @@ export default function SmoothScroll({
     gsap.ticker.add(onTick);
     gsap.ticker.lagSmoothing(0);
 
+    // Route in-page anchor clicks through Lenis so navigation glides to the
+    // section instead of snapping — the scroll is part of the narrative.
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement)?.closest?.('a[href^="#"]') as
+        | HTMLAnchorElement
+        | null;
+      if (!a) return;
+      const id = a.getAttribute('href');
+      if (!id || id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      lenis.scrollTo(target as HTMLElement, { offset: -24, duration: 1.4 });
+      history.replaceState(null, '', id);
+    };
+    document.addEventListener('click', onClick);
+
     return () => {
+      document.removeEventListener('click', onClick);
       gsap.ticker.remove(onTick);
       lenis.destroy();
     };

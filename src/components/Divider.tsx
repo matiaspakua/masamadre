@@ -13,9 +13,10 @@ export default function Divider() {
         <path
           d="M0 12 Q 150 2 300 12 T 600 12 T 900 12 T 1200 12"
           fill="none"
-          stroke="currentColor"
+          stroke="var(--accent)"
+          strokeOpacity="0.42"
           strokeWidth="1"
-          className="div-flow text-levain/40"
+          className="div-flow"
         />
         <path
           d="M0 12 Q 150 22 300 12 T 600 12 T 900 12 T 1200 12"
@@ -25,7 +26,7 @@ export default function Divider() {
           className="div-flow-rev text-phosphor/30"
         />
       </svg>
-      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-paper px-3 font-mono text-[0.6rem] text-levain">
+      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-paper px-3 font-mono text-[0.6rem] text-[color:var(--accent)]">
         ✶
       </span>
     </div>
