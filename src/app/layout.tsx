@@ -3,6 +3,9 @@ import { Fraunces, Spline_Sans, Space_Mono } from 'next/font/google';
 import './globals.css';
 import SmoothScroll from '@/components/SmoothScroll';
 import { LangProvider } from '@/lib/i18n';
+import AmbientCanvas from '@/components/AmbientCanvas';
+import Ferment from '@/components/Ferment';
+import Intro from '@/components/Intro';
 
 // Display: a characterful old-style serif with optical sizing & soft "wonk".
 const display = Fraunces({
@@ -55,8 +58,11 @@ export default function RootLayout({
       className={`${display.variable} ${body.variable} ${mono.variable}`}
     >
       <body>
+        <AmbientCanvas />
         <LangProvider>
           <SmoothScroll>{children}</SmoothScroll>
+          <Ferment />
+          <Intro />
         </LangProvider>
         <div className="grain" aria-hidden="true" />
       </body>

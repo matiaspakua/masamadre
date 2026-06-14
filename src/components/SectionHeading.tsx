@@ -15,11 +15,11 @@ export default function SectionHeading({
   return (
     <div className={className}>
       <div className="reveal mb-6 flex items-center gap-4">
-        <span className="font-mono text-sm text-levain">{index}</span>
-        <span className="h-px w-10 bg-line" />
+        <span className="font-mono text-sm text-[color:var(--accent)]">{index}</span>
+        <span className="h-px w-10 bg-[color:var(--accent-line)]" />
         <span className="eyebrow">{eyebrow}</span>
       </div>
-      <h2 className="reveal display text-balance text-[clamp(2.4rem,6vw,5rem)]">
+      <h2 className="reveal-mask display text-balance text-[clamp(2.4rem,6vw,5rem)]">
         {title}
       </h2>
     </div>
