@@ -4,6 +4,7 @@ import Hero from '@/components/sections/Hero';
 import Origins from '@/components/sections/Origins';
 import Timeline from '@/components/sections/Timeline';
 import Laboratory from '@/components/sections/Laboratory';
+import StarterGuide from '@/components/sections/StarterGuide';
 import BreadTypes from '@/components/sections/BreadTypes';
 import Process from '@/components/sections/Process';
 import Composition from '@/components/sections/Composition';
@@ -23,6 +24,8 @@ export default function Home() {
         <Origins />
         <Timeline />
         <Laboratory />
+        <Divider />
+        <StarterGuide />
         <BreadTypes />
         <Divider />
         <Process />

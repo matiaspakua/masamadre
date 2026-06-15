@@ -173,6 +173,17 @@ export interface SiteContent {
       seeds: { key: string; name: string }[];
     };
   };
+  starter: {
+    index: string;
+    eyebrow: string;
+    titleA: string;
+    titleB: string;
+    intro: string;
+    feed: string;
+    signLabel: string;
+    days: { d: string; phase: string; action: string; sign: string }[];
+    test: { tag: string; title: string; body: string };
+  };
   breadTypes: {
     index: string;
     eyebrow: string;
@@ -246,6 +257,7 @@ const es: SiteContent = {
       { id: 'origins', label: 'Orígenes' },
       { id: 'timeline', label: 'Historia' },
       { id: 'laboratory', label: 'Laboratorio' },
+      { id: 'starter', label: 'Crear fermento' },
       { id: 'breads', label: 'Panes' },
       { id: 'process', label: 'Proceso' },
       { id: 'composition', label: 'Composición' },
@@ -404,8 +416,32 @@ const es: SiteContent = {
       ],
     },
   },
-  breadTypes: {
+  starter: {
     index: 'IV',
+    eyebrow: 'Guía · de la nada a la vida',
+    titleA: 'Cría tu',
+    titleB: 'masa madre',
+    intro:
+      'No se compra: se cría. Con harina, agua y siete días de paciencia, un frasco pasa de inerte a burbujeante. Cada día descartas la mitad y vuelves a alimentar; el cultivo aprende un ritmo y, al final, levanta una hogaza por sí solo.',
+    feed: 'Alimentación 1:1:1 · harina : agua : fermento, en peso',
+    signLabel: 'Señal',
+    days: [
+      { d: '01', phase: 'La mezcla', action: 'Une 50 g de harina integral y 50 g de agua tibia en un frasco. Tápalo sin cerrar y déjalo a 24–26 °C.', sign: 'Nada todavía, o alguna burbuja suelta. El grano y el aire empiezan a poblarlo.' },
+      { d: '02', phase: 'Primeras señales', action: 'Descarta la mitad. Alimenta con 50 g de harina y 50 g de agua, y remueve bien.', sign: 'Burbujas dispersas y un olor crudo, casi avinagrado. La población despierta.' },
+      { d: '03', phase: 'El falso arranque', action: 'Vuelve a descartar la mitad y alimentar 1:1:1, a la misma hora cada día.', sign: 'Sube, huele fuerte… y se calma. Mandan las bacterias; las levaduras aún no.' },
+      { d: '04', phase: 'Cambia el aroma', action: 'Descarta y alimenta. Si hace calor, hazlo dos veces al día.', sign: 'De avinagrado pasa a yogur y fruta. Más burbujas, más constancia.' },
+      { d: '05', phase: 'Su propio ritmo', action: 'Sigue alimentando 1:1:1 a la misma hora. Marca el nivel con una banda.', sign: 'Sube y baja de forma predecible. Casi dobla entre comidas.' },
+      { d: '06', phase: 'Casi listo', action: 'Alimenta y cronometra cuánto tarda en llegar al pico.', sign: 'Dobla en 4–8 h, con cúpula de burbujas y olor a sidra.' },
+      { d: '07', phase: 'Vivo y maduro', action: 'Alimenta, espera el pico y hornea —o guárdalo en la nevera y aliméntalo cada semana.', sign: 'Triplica, huele a yogur y manzana, y pasa la prueba de flotación.' },
+    ],
+    test: {
+      tag: 'La prueba',
+      title: '¿Está listo? Que flote.',
+      body: 'Deja caer una cucharadita del fermento en su pico sobre un vaso de agua. Si flota, el gas atrapado confirma que tiene fuerza para levantar una hogaza. Si se hunde, dale otra alimentación y prueba de nuevo mañana.',
+    },
+  },
+  breadTypes: {
+    index: 'V',
     eyebrow: 'Familias del pan',
     titleA: 'Un grano,',
     titleB: 'mil panes',
@@ -420,7 +456,7 @@ const es: SiteContent = {
     ],
   },
   process: {
-    index: 'V',
+    index: 'VI',
     eyebrow: 'Del fermento al horno',
     titleA: 'Doce pasos,',
     titleB: 'una subida',
@@ -440,7 +476,7 @@ const es: SiteContent = {
     ],
   },
   composition: {
-    index: 'VI',
+    index: 'VII',
     eyebrow: 'Composición y química',
     titleA: 'De qué está hecha',
     titleB: 'una hogaza',
@@ -456,7 +492,7 @@ const es: SiteContent = {
     sugar: '(azúcar)',
   },
   oven: {
-    index: 'VII',
+    index: 'VIII',
     eyebrow: 'El Horno',
     titleA: 'Tres cambios,',
     titleB: 'a la vez',
@@ -471,7 +507,7 @@ const es: SiteContent = {
       'Después llega el enfriado: el paso final y silencioso. Las proteínas se asientan, la miga se estabiliza y la corteza canta al contraerse. La hogaza sigue haciéndose mucho después de salir del calor.',
   },
   benefits: {
-    index: 'VIII',
+    index: 'IX',
     eyebrow: 'Beneficios y matices',
     titleA: 'Ventajas reales,',
     titleB: 'contadas con honestidad',
@@ -483,7 +519,7 @@ const es: SiteContent = {
     ],
   },
   references: {
-    index: 'IX',
+    index: 'X',
     eyebrow: 'El libro de referencias',
     titleA: 'Las fuentes',
     titleB: 'que lo sostienen',
@@ -620,7 +656,7 @@ const es: SiteContent = {
     ],
   },
   closing: {
-    index: 'X',
+    index: 'XI',
     title: 'Tiempo que se saborea',
     body: 'Un tarro de harina y agua, mantenido tibio y alimentado, guarda un hilo ininterrumpido de fermentación que llega hasta los primeros agricultores. Hornear con masa madre es cuidar un archivo vivo —parte cultura, parte química, parte oficio— y entregarlo, todavía vivo, a quien hornee después.',
     signature: 'harina · agua · sal · tiempo',
@@ -644,6 +680,7 @@ const en: SiteContent = {
       { id: 'origins', label: 'Origins' },
       { id: 'timeline', label: 'Timeline' },
       { id: 'laboratory', label: 'Laboratory' },
+      { id: 'starter', label: 'Your starter' },
       { id: 'breads', label: 'Breads' },
       { id: 'process', label: 'Process' },
       { id: 'composition', label: 'Composition' },
@@ -802,8 +839,32 @@ const en: SiteContent = {
       ],
     },
   },
-  breadTypes: {
+  starter: {
     index: 'IV',
+    eyebrow: 'Guide · from nothing to life',
+    titleA: 'Raise your',
+    titleB: 'own starter',
+    intro:
+      'You don’t buy it — you raise it. With flour, water and seven days of patience, a jar turns from inert to bubbling. Each day you discard half and feed again; the culture learns a rhythm and, by the end, lifts a loaf on its own.',
+    feed: '1:1:1 feed · flour : water : starter, by weight',
+    signLabel: 'Sign',
+    days: [
+      { d: '01', phase: 'The mix', action: 'Stir 50 g wholegrain flour into 50 g warm water in a jar. Cover loosely and leave it at 24–26 °C.', sign: 'Nothing yet, or a stray bubble. Grain and air begin to settle in.' },
+      { d: '02', phase: 'First signs', action: 'Discard half. Feed with 50 g flour and 50 g water, and stir well.', sign: 'Scattered bubbles and a raw, almost vinegary smell. The population wakes.' },
+      { d: '03', phase: 'The false start', action: 'Discard half and feed 1:1:1 again — same time each day.', sign: 'It rises, smells sharp… then settles. Bacteria lead; yeast hasn’t arrived.' },
+      { d: '04', phase: 'The smell turns', action: 'Discard and feed. In warm weather, feed twice a day.', sign: 'Vinegar gives way to yoghurt and fruit. More bubbles, more consistency.' },
+      { d: '05', phase: 'Its own rhythm', action: 'Keep feeding 1:1:1 at the same hour. Mark the level with a band.', sign: 'It rises and falls predictably. Nearly doubles between feeds.' },
+      { d: '06', phase: 'Almost there', action: 'Feed, then time how long it takes to peak.', sign: 'Doubles in 4–8 h, with a dome of bubbles and a cidery smell.' },
+      { d: '07', phase: 'Alive and mature', action: 'Feed, wait for the peak and bake — or keep it in the fridge and feed weekly.', sign: 'Triples, smells of yoghurt and apple, and passes the float test.' },
+    ],
+    test: {
+      tag: 'The test',
+      title: 'Ready? Make it float.',
+      body: 'Drop a teaspoon of starter at its peak into a glass of water. If it floats, the trapped gas confirms it has the strength to lift a loaf. If it sinks, give it another feed and try again tomorrow.',
+    },
+  },
+  breadTypes: {
+    index: 'V',
     eyebrow: 'Families of bread',
     titleA: 'One grain,',
     titleB: 'a thousand breads',
@@ -818,7 +879,7 @@ const en: SiteContent = {
     ],
   },
   process: {
-    index: 'V',
+    index: 'VI',
     eyebrow: 'Starter to oven',
     titleA: 'Twelve steps,',
     titleB: 'one rise',
@@ -838,7 +899,7 @@ const en: SiteContent = {
     ],
   },
   composition: {
-    index: 'VI',
+    index: 'VII',
     eyebrow: 'Composition & chemistry',
     titleA: 'What a loaf is',
     titleB: 'made of',
@@ -854,7 +915,7 @@ const en: SiteContent = {
     sugar: '(sugar)',
   },
   oven: {
-    index: 'VII',
+    index: 'VIII',
     eyebrow: 'The Oven',
     titleA: 'Three changes,',
     titleB: 'at once',
@@ -869,7 +930,7 @@ const en: SiteContent = {
       'Then comes cooling — the quiet final step. Proteins settle, the crumb stabilises, and the crust sings as it contracts. The loaf is still becoming itself long after it leaves the heat.',
   },
   benefits: {
-    index: 'VIII',
+    index: 'IX',
     eyebrow: 'Benefits & nuance',
     titleA: 'Real gains,',
     titleB: 'honestly told',
@@ -881,7 +942,7 @@ const en: SiteContent = {
     ],
   },
   references: {
-    index: 'IX',
+    index: 'X',
     eyebrow: 'The book of references',
     titleA: 'The sources',
     titleB: 'that hold it up',
@@ -1018,7 +1079,7 @@ const en: SiteContent = {
     ],
   },
   closing: {
-    index: 'X',
+    index: 'XI',
     title: 'Time you can taste',
     body: 'A jar of flour and water, kept warm and fed, holds an unbroken thread of fermentation reaching back to the first farmers. To bake with masa madre is to tend a living archive — part culture, part chemistry, part craft — and to hand it, still alive, to whoever bakes next.',
     signature: 'flour · water · salt · time',
