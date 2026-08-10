@@ -107,7 +107,7 @@ export default function Timeline() {
     <section id="timeline" className="relative bg-sink">
       <div ref={root} className="relative h-screen overflow-hidden">
         {/* Header pinned over the moving track */}
-        <div className="pointer-events-none absolute left-6 top-20 z-20 sm:left-10 lg:left-16">
+        <div className="pointer-events-none absolute left-6 top-20 z-20 -m-4 max-w-[22rem] rounded-sm bg-sink/90 p-4 backdrop-blur-sm sm:left-10 lg:left-16">
           <div className="mb-4 flex items-center gap-4">
             <span className="font-mono text-sm text-levain">
               {timeline.index}

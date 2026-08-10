@@ -55,7 +55,7 @@ export default function Nav() {
       {/* Wordmark */}
       <a
         href="#hero"
-        className="fixed left-6 top-5 z-40 font-mono text-xs uppercase tracking-[0.3em] text-ink/80 hover:text-levain lg:left-10"
+        className="fixed left-6 top-4 z-40 border border-line bg-surface/80 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.3em] text-ink/80 shadow-sm backdrop-blur transition-colors hover:border-levain hover:text-levain lg:left-10"
       >
         Masa&nbsp;Madre
       </a>

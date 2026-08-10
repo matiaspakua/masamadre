@@ -46,7 +46,7 @@ export default function Intro() {
         )
         .to('.intro-content', { opacity: 0, duration: 0.5 }, '+=0.15')
         .to(
-          '.intro-root',
+          root.current,
           {
             clipPath: 'inset(0 0 100% 0)',
             duration: 1,

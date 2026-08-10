@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useContent } from '@/lib/i18n';
 import { img } from '@/lib/asset';
 import StarterJar from '@/components/lab/StarterJar';
@@ -18,6 +19,8 @@ export default function Hero() {
       '(prefers-reduced-motion: reduce)',
     ).matches;
     if (reduced || !root.current) return;
+
+    gsap.registerPlugin(ScrollTrigger);
 
     let cleanup: (() => void) | undefined;
     const ctx = gsap.context(() => {
@@ -79,7 +82,7 @@ export default function Hero() {
     <section
       id="hero"
       ref={root}
-      className="relative flex min-h-screen items-center overflow-hidden px-6 pt-24 sm:px-10 lg:px-16"
+      className="relative flex min-h-screen items-center overflow-hidden px-6 pb-16 pt-24 sm:px-10 lg:px-16 lg:pb-0"
     >
       <div className="glow-levain pointer-events-none absolute inset-0" />
 
