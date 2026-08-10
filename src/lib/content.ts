@@ -300,7 +300,7 @@ const es: SiteContent = {
       { era: 'I', year: 'c. 8000 a.C.', region: 'Creciente Fértil', title: 'El primer grano', body: 'Se domestican el trigo y la cebada silvestres. La agricultura ata a la gente a un lugar, y el grano molido con agua se convierte en las primeras gachas y panes planos: la materia prima de todo lo que sigue.' },
       { era: 'II', year: 'c. 3700 a.C.', region: 'Suiza', title: 'El fermento más antiguo', body: 'Aquí se excava uno de los panes de masa madre más antiguos que se conocen. Mucho antes de poder nombrar un microbio, las levaduras y bacterias salvajes de la harina ya levantaban la masa por sí solas.' },
       { era: 'III', year: 'c. 3000 a.C.', region: 'Antiguo Egipto', title: 'El pan como moneda', body: 'Las panaderías egipcias industrializan la fermentación. El pan y la cerveza comparten el mismo fermento vivo; las hogazas se vuelven salario, ofrenda y vida cotidiana a orillas del Nilo.' },
-      { era: 'IV', year: 'c. 77 d.C.', region: 'Roma', title: 'Plinio lo escribe', body: 'Plinio el Viejo documenta varios métodos para conservar y renovar un fermento. La masa madre es ya un oficio registrado, llevado por todo el Imperio en un tarro de masa fermentando.' },
+      { era: 'IV', year: 'c. 77 d.C.', region: 'Roma', title: 'Plinio lo escribe', body: 'Plinio el Viejo documenta varios métodos para conservar y renovar un fermento. La masa madre es ya un oficio registrado, llevado por todo el Imperio en un tarro de masa en fermentación.' },
       { era: 'V', year: 'c. 1300 d.C.', region: 'Europa medieval', title: 'La era del barm', body: 'Cervecería y panadería se entrelazan. El barm —la espuma de la cerveza en fermentación— empieza a reemplazar al fermento salvaje, cambiando acidez y conservación por velocidad y una miga más ligera.' },
       { era: 'VI', year: '1857', region: 'Francia', title: 'La fermentación explicada', body: 'Louis Pasteur demuestra que la fermentación es obra de microorganismos vivos. Los cultivos invisibles que los panaderos manejaban por intuición desde hace milenios tienen al fin una biología.' },
       { era: 'VII', year: '1849', region: 'San Francisco', title: 'Una ciudad y su cepa', body: 'Panaderos franceses llevan su fermento a la California de la fiebre del oro. El cultivo local se vuelve tan distintivo que su bacteria dominante acaba llamándose Fructilactobacillus sanfranciscensis: un lugar inscrito en una especie.' },
@@ -315,7 +315,7 @@ const es: SiteContent = {
     titleA: 'Un cultivo,',
     titleB: 'observado',
     intro:
-      'La masa madre es una simbiosis: levaduras salvajes y bacterias lácticas viviendo en harina y agua. Avanza la fermentación y observa cómo responde la estación de trabajo: el gas subiendo, el pH bajando, la hogaza aprendiendo a protegerse.',
+      'La masa madre es una simbiosis: levaduras salvajes y bacterias lácticas que viven en harina y agua. Avanza la fermentación y observa cómo responde la estación de trabajo: el gas subiendo, el pH bajando, la hogaza aprendiendo a protegerse.',
     inhabitants: 'Habitantes · toca para inspeccionar',
     quote:
       '«La levadura hace el gas. Las bacterias hacen el ácido. Juntas hacen el pan, y lo mantienen seguro.»',
@@ -512,7 +512,7 @@ const es: SiteContent = {
     titleA: 'Ventajas reales,',
     titleB: 'contadas con honestidad',
     items: [
-      { title: 'Predigerido por microbios', body: 'La fermentación descompone las proteínas hacia sus aminoácidos y preprocesa el almidón. La hogaza llega en parte digerida, lo que muchos encuentran más suave.' },
+      { title: 'Predigerido por microbios', body: 'La fermentación descompone las proteínas en sus aminoácidos y preprocesa el almidón. La hogaza llega en parte digerida, lo que muchos encuentran más suave.' },
       { title: 'Minerales liberados', body: 'Los granos enteros llevan ácido fítico, que secuestra hierro, zinc, magnesio y calcio. La fermentación láctica activa la fitasa, liberando esos minerales para su absorción.' },
       { title: 'Un azúcar más lento', body: 'La acidificación retrasa la digestibilidad del almidón, tendiendo a una respuesta glucémica más baja que el pan blanco de levadura rápida.' },
       { title: 'Matiz honesto', body: 'La masa madre es pan, no medicina. Las ventajas son reales pero modestas, y dependen de la harina, el tiempo y la hidratación. Hablar de panacea es exagerar la evidencia.' },
@@ -744,7 +744,7 @@ const en: SiteContent = {
       '“Yeast makes the gas. Bacteria make the sour. Together they make the bread — and keep it safe.”',
     stages: [
       { key: 'mix', label: 'Fresh mix', hours: '0 h', ph: 6.0, temp: '24°C', activity: 0.12, note: 'Flour meets water. Wild yeast and lactic acid bacteria wake from the grain and begin to feed on released sugars.' },
-      { key: 'rise', label: 'Active rise', hours: '6 h', ph: 4.8, temp: '26°C', activity: 0.55, note: 'Yeast exhale carbon dioxide; the culture froths and domes. Bacteria pour out lactic acid and the pH begins its long fall.' },
+      { key: 'rise', label: 'Active rise', hours: '6 h', ph: 4.8, temp: '26°C', activity: 0.55, note: 'The yeast exhales carbon dioxide; the culture froths and domes. Bacteria pour out lactic acid and the pH begins its long fall.' },
       { key: 'peak', label: 'Peak', hours: '12 h', ph: 4.1, temp: '27°C', activity: 0.92, note: 'Gas production peaks. The starter triples and smells of yoghurt and cider — the symbiosis at full voice.' },
       { key: 'mature', label: 'Mature & acidic', hours: '24 h', ph: 3.8, temp: '25°C', activity: 0.4, note: 'Acidity settles into the 3.8–4.5 range. Below pH 4.6 most pathogens cannot survive — the loaf protects itself.' },
     ],
@@ -920,7 +920,7 @@ const en: SiteContent = {
     titleA: 'Three changes,',
     titleB: 'at once',
     intro:
-      'Heat ends the fermentation and begins the bread. In a few hundred degrees, a slack, living dough is fixed forever into crust and crumb.',
+      'Heat ends the fermentation and begins the bread. At a few hundred degrees, a slack, living dough is fixed forever into crust and crumb.',
     changes: [
       { temp: '150°C+', title: 'Caramelisation', body: 'Sugars freed during fermentation brown on the surface, building the crust’s colour, aroma, and bittersweet depth.' },
       { temp: '160°C', title: 'Proteins coagulate', body: 'Gluten sets. The proteins align and lock, fixing the airy structure of the crumb in place for good.' },
@@ -935,7 +935,7 @@ const en: SiteContent = {
     titleA: 'Real gains,',
     titleB: 'honestly told',
     items: [
-      { title: 'Pre-digested by microbes', body: 'Fermentation breaks proteins down toward their amino-acid building blocks and pre-processes starch. The loaf arrives partly digested, which many find gentler.' },
+      { title: 'Pre-digested by microbes', body: 'Fermentation breaks proteins down into their amino-acid building blocks and pre-processes starch. The loaf arrives partly digested, which many find gentler.' },
       { title: 'Minerals unlocked', body: 'Whole grains carry phytic acid, which binds iron, zinc, magnesium, and calcium out of reach. Lactic fermentation activates phytase, releasing those minerals for absorption.' },
       { title: 'A slower sugar', body: 'Acidification retards starch digestibility, tending toward a lower glycaemic response than fast-leavened white bread.' },
       { title: 'Honest nuance', body: 'Sourdough is bread, not medicine. The gains are real but modest, and depend on flour, time, and hydration. Claims of a cure-all overreach the evidence.' },
